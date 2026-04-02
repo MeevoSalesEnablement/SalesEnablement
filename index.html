@@ -1,480 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meevo Sales Onboarding — Enablement Dashboard</title>
-<base target="_blank">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Meevo Sales Enablement Dashboard</title>
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg: #0a0b0e;
-  --surface: #111318;
-  --surface2: #181b21;
-  --border: #252830;
-  --border2: #2e3140;
-  --accent: #c9f23a;
-  --accent2: #3af2c9;
-  --week1: #c9f23a;
-  --week2: #3af2c9;
-  --week3: #a78bfa;
-  --attend: #f2a43a;
-  --text: #ffffff;
-  --text2: #d0d4e0;
-  --text3: #b0b8cc;
-  --muted: #8892a4;
-}
-body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
-
-header {
-  padding: 40px 56px 32px; border-bottom: 1px solid var(--border);
-  display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; position: relative;
-}
-header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 180px at 15% 0%, rgba(201,242,58,0.07) 0%, transparent 70%); pointer-events: none; }
-.header-left h1 { font-family: 'DM Serif Display', serif; font-size: clamp(26px, 3.5vw, 42px); line-height: 1.1; letter-spacing: -0.5px; }
-.header-left h1 em { color: var(--accent); font-style: italic; }
-.header-left p { margin-top: 8px; color: var(--text3); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; }
-.stats-row { display: flex; gap: 28px; flex-wrap: wrap; }
-.stat { text-align: right; }
-.stat-num { font-family: 'DM Serif Display', serif; font-size: 34px; color: var(--accent); line-height: 1; }
-.stat-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 3px; }
-
-.tabs-bar { display: flex; border-bottom: 1px solid var(--border); padding: 0 56px; overflow-x: auto; gap: 0; }
-.tabs-bar::-webkit-scrollbar { height: 3px; }
-.tabs-bar::-webkit-scrollbar-thumb { background: var(--border2); }
-.tab-btn { background: none; border: none; cursor: pointer; padding: 16px 22px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: color 0.2s, border-color 0.2s; letter-spacing: 0.04em; text-transform: uppercase; }
-.tab-btn:hover { color: var(--text2); }
-.tab-btn.active[data-tab="week1"] { color: var(--week1); border-bottom-color: var(--week1); }
-.tab-btn.active[data-tab="week2"] { color: var(--week2); border-bottom-color: var(--week2); }
-.tab-btn.active[data-tab="week3"] { color: var(--week3); border-bottom-color: var(--week3); }
-.tab-btn.active[data-tab="attendees"] { color: var(--attend); border-bottom-color: var(--attend); }
-.tab-btn.active[data-tab="modules"] { color: #f2a43a; border-bottom-color: #f2a43a; }
-.tab-btn.active[data-tab="product"] { color: var(--accent2); border-bottom-color: var(--accent2); }
-
-.tab-content { display: none; }
-.tab-content.active { display: block; animation: fadeIn 0.2s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-
-.week-container { padding: 36px 56px; }
-.week-hero { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px 28px; margin-bottom: 36px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-.week-tag { font-size: 11px; font-weight: 600; padding: 5px 13px; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
-.w1 { background: rgba(201,242,58,0.1); color: var(--week1); border: 1px solid rgba(201,242,58,0.2); }
-.w2 { background: rgba(58,242,201,0.1); color: var(--week2); border: 1px solid rgba(58,242,201,0.2); }
-.w3 { background: rgba(167,139,250,0.1); color: var(--week3); border: 1px solid rgba(167,139,250,0.2); }
-.week-focus { font-size: 14px; color: var(--text2); }
-.week-focus strong { color: var(--text); }
-
-.day-block { margin-bottom: 32px; }
-.day-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-.day-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 5px 14px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text2); white-space: nowrap; }
-.day-line { flex: 1; height: 1px; background: var(--border); }
-
-.sessions-table { width: 100%; border-collapse: separate; border-spacing: 0 3px; }
-.sessions-table thead th { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text3); padding: 0 14px 8px; text-align: left; font-weight: 500; }
-.sessions-table thead th:last-child { text-align: center; }
-.session-row { background: var(--surface); transition: background 0.15s; }
-.session-row:hover { background: var(--surface2); }
-.session-row td { padding: 12px 14px; font-size: 13px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--text2); }
-.session-row td:first-child { border-left: 1px solid var(--border); border-radius: 8px 0 0 8px; color: var(--text3); font-size: 11.5px; white-space: nowrap; }
-.session-row td:last-child { border-right: 1px solid var(--border); border-radius: 0 8px 8px 0; text-align: center; }
-.session-row.break-row { opacity: 0.4; }
-.session-title { font-weight: 500; color: var(--text); }
-.session-title small { display: block; font-size: 10.5px; color: var(--text3); font-weight: 400; margin-top: 2px; }
-
-.dept-badge { display: inline-block; padding: 2px 8px; border-radius: 100px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
-.dept-SALES { background: rgba(201,242,58,0.08); color: #a8cc30; }
-.dept-PRODUCT { background: rgba(58,242,201,0.08); color: #2abf99; }
-.dept-HR { background: rgba(242,164,58,0.08); color: #c88830; }
-.dept-IT { background: rgba(100,120,240,0.08); color: #7090e8; }
-.dept-CX { background: rgba(240,100,100,0.08); color: #d06060; }
-.dept-SG { background: rgba(167,139,250,0.08); color: #9070d4; }
-.dept-EDU { background: rgba(255,220,100,0.08); color: #c8a830; }
-.dept-ALL { background: rgba(180,180,180,0.08); color: #909090; }
-
-.fmt { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
-.fmt-Proctored { background: rgba(201,242,58,0.07); color: #90b028; border: 1px solid rgba(201,242,58,0.12); }
-.fmt-Self-Guided { background: rgba(167,139,250,0.07); color: #8060c0; border: 1px solid rgba(167,139,250,0.12); }
-.fmt-Meeting { background: rgba(58,170,242,0.07); color: #3090d0; border: 1px solid rgba(58,170,242,0.12); }
-.fmt-Practice { background: rgba(242,100,58,0.07); color: #c05030; border: 1px solid rgba(242,100,58,0.12); }
-.fmt-Assessment { background: rgba(242,58,110,0.07); color: #c03060; border: 1px solid rgba(242,58,110,0.12); }
-.fmt-Social { background: rgba(58,242,201,0.07); color: #20a080; border: 1px solid rgba(58,242,201,0.12); }
-.fmt-BREAK { background: rgba(80,80,80,0.07); color: #606060; border: 1px solid rgba(80,80,80,0.12); }
-
-.link-btn { display: inline-flex; align-items: center; gap: 4px; padding: 4px 11px; border-radius: 5px; background: rgba(201,242,58,0.08); color: var(--accent); border: 1px solid rgba(201,242,58,0.2); font-size: 10px; font-weight: 600; text-decoration: none; text-transform: uppercase; letter-spacing: 0.07em; transition: background 0.15s; cursor: pointer; }
-.link-btn:hover { background: rgba(201,242,58,0.16); }
-
-/* ATTENDEES */
-.attendees-container { padding: 36px 56px; }
-.attend-hero { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px 28px; margin-bottom: 36px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-.attend-hero-left h2 { font-family: 'DM Serif Display', serif; font-size: 22px; }
-.attend-hero-left p { font-size: 13px; color: var(--text3); margin-top: 4px; }
-.attend-stats { display: flex; gap: 24px; }
-.attend-stat { text-align: center; }
-.attend-stat-num { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--attend); line-height: 1; }
-.attend-stat-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
-.attend-table { width: 100%; border-collapse: separate; border-spacing: 0 3px; }
-.attend-table thead th { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text3); padding: 0 14px 10px; text-align: left; font-weight: 500; }
-.attend-row { background: var(--surface); transition: background 0.15s; }
-.attend-row:hover { background: var(--surface2); }
-.attend-row td { padding: 14px; font-size: 13px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--text2); }
-.attend-row td:first-child { border-left: 1px solid var(--border); border-radius: 8px 0 0 8px; font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--border2); width: 50px; text-align: center; }
-.attend-row td:last-child { border-right: 1px solid var(--border); border-radius: 0 8px 8px 0; }
-.attend-title { font-weight: 600; color: var(--text); font-size: 13.5px; }
-.attend-desc { font-size: 12px; color: var(--text3); margin-top: 4px; line-height: 1.55; max-width: 480px; }
-.attend-week-tag { display: inline-block; font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.07em; }
-.atag-w1 { background: rgba(201,242,58,0.08); color: var(--week1); }
-.atag-w2 { background: rgba(58,242,201,0.08); color: var(--week2); }
-.atag-w3 { background: rgba(167,139,250,0.08); color: var(--week3); }
-.attend-name { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; color: var(--text2); }
-.attend-name::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
-.attend-empty { font-size: 12px; color: var(--muted); font-style: italic; }
-.attend-date { font-size: 11px; color: var(--text3); white-space: nowrap; }
-
-/* MODULES */
-.modules-grid { padding: 36px 56px; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
-.module-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 22px; display: flex; flex-direction: column; gap: 12px; transition: border-color 0.2s, transform 0.15s; position: relative; overflow: hidden; }
-.module-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--week1); border-radius: 10px 0 0 10px; }
-.module-card.w2::before { background: var(--week2); }
-.module-card.w3::before { background: var(--week3); }
-.module-card:hover { border-color: var(--border2); transform: translateY(-2px); }
-.module-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
-.module-num { font-family: 'DM Serif Display', serif; font-size: 30px; color: var(--border2); line-height: 1; flex-shrink: 0; }
-.module-week-tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 9px; border-radius: 100px; }
-.wtag-w1 { background: rgba(201,242,58,0.08); color: var(--week1); }
-.wtag-w2 { background: rgba(58,242,201,0.08); color: var(--week2); }
-.wtag-w3 { background: rgba(167,139,250,0.08); color: var(--week3); }
-.module-title { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.35; }
-.module-desc { font-size: 12px; color: var(--text3); line-height: 1.6; }
-.module-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); }
-.module-day { font-size: 11px; color: var(--text3); }
-
-/* PRODUCT */
-.product-grid { padding: 0 56px 36px; display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 18px; }
-.product-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 26px; transition: border-color 0.2s, transform 0.15s; position: relative; overflow: hidden; }
-.product-card::after { content: ''; position: absolute; top: -50px; right: -50px; width: 140px; height: 140px; background: radial-gradient(circle, rgba(58,242,201,0.05) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
-.product-card:hover { border-color: var(--border2); transform: translateY(-2px); }
-.product-mod-num { font-family: 'DM Serif Display', serif; font-size: 44px; color: rgba(58,242,201,0.1); line-height: 1; margin-bottom: 10px; }
-.product-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
-.product-topics { font-size: 12.5px; color: var(--text3); line-height: 1.65; margin-bottom: 16px; }
-.product-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-.product-day-tag { background: rgba(58,242,201,0.08); color: var(--week2); border: 1px solid rgba(58,242,201,0.15); padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; }
-.product-by { font-size: 11px; color: var(--text3); }
-.note-box { margin: 36px 56px 24px; background: rgba(58,242,201,0.04); border: 1px solid rgba(58,242,201,0.12); border-radius: 8px; padding: 14px 18px; font-size: 12.5px; color: #5aa898; line-height: 1.6; }
-.note-box strong { color: var(--week2); }
-
-@media (max-width: 768px) {
-  header, .tabs-bar, .week-container, .attendees-container, .modules-grid, .product-grid, .note-box { padding-left: 16px; padding-right: 16px; }
-  .modules-grid, .product-grid { grid-template-columns: 1fr; }
-}
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f1923;color:#c8d6e0;min-height:100vh}
+.header{background:#151f2b;border-bottom:1px solid #1e2d3d;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.logo-area{display:flex;align-items:center;gap:14px}
+.header-title{font-size:17px;font-weight:600;color:#4ade94}.header-sub{font-size:12px;color:#6b8399;margin-top:1px}
+.header-right{font-size:11px;color:#4a6275}
+.global-search{padding:9px 16px;border-radius:10px;border:1px solid #1e2d3d;font-size:13px;width:280px;font-family:inherit;background:#1a2736;color:#e0eaf0;outline:none;transition:border .2s}
+.global-search:focus{border-color:#4ade94;box-shadow:0 0 0 2px rgba(74,222,148,.15)}
+.global-search::placeholder{color:#4a6275}
+.tabs{background:#151f2b;border-bottom:1px solid #1e2d3d;display:flex;overflow-x:auto;position:sticky;top:0;z-index:10}
+.tab{padding:13px 22px;font-size:13px;font-weight:500;color:#6b8399;background:none;border:none;border-bottom:2.5px solid transparent;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .15s}
+.tab:hover{color:#4ade94}.tab.active{font-weight:600;color:#4ade94;border-bottom-color:#4ade94}
+.main{padding:24px;max-width:1060px;margin:0 auto}
+.cards{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+.card{background:#151f2b;border-radius:14px;padding:18px 20px;border:1px solid #1e2d3d;flex:1;min-width:145}
+.card-label{font-size:10px;color:#5a7a8f;font-weight:600;text-transform:uppercase;letter-spacing:.7px}
+.card-value{font-size:28px;font-weight:700;margin-top:4px}
+.card-sub{font-size:11px;color:#4a6275;margin-top:3px}
+.stitle{font-size:16px;font-weight:600;color:#e0eaf0;margin-bottom:6px}
+.ssub{font-size:12px;color:#5a7a8f;margin-bottom:16px}
+.mo-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+.mo-card{flex:1;min-width:120;background:#151f2b;border-radius:12px;padding:14px 16px;border:1px solid #1e2d3d}
+.mo-label{font-size:11px;color:#5a7a8f;font-weight:500}.mo-val{font-size:24px;font-weight:700;margin-top:3px}
+.tbl-wrap{overflow-x:auto;background:#151f2b;border-radius:14px;border:1px solid #1e2d3d}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead tr{background:#1a2736;border-bottom:2px solid #1e2d3d}
+th{text-align:left;padding:11px 12px;color:#5a7a8f;font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;user-select:none}
+td{padding:11px 12px;border-bottom:1px solid #1a2736}
+tbody tr{transition:background .1s;cursor:pointer}tbody tr:hover{background:#1a2736}
+.av{border-radius:50%;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0}
+.name-cell{display:flex;align-items:center;gap:10px}
+.badge{padding:3px 10px;border-radius:12px;font-size:12px;font-weight:700}
+.rep-card{background:#151f2b;border-radius:14px;padding:20px;margin-bottom:14px;border:1px solid #1e2d3d}
+.rep-header{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.rep-name{font-weight:600;font-size:15px;color:#e0eaf0}.rep-sub{font-size:12px;color:#5a7a8f}
+.rep-score{font-size:26px;font-weight:700}
+.rep-stats{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.rep-stat{flex:1;min-width:90;border-radius:10px;padding:10px 12px;text-align:center}
+.rep-stat-val{font-size:20px;font-weight:700}.rep-stat-label{font-size:10px;color:#5a7a8f;margin-top:2px}
+.tag-section{margin-bottom:12px}
+.tag-title{font-size:10px;font-weight:600;color:#5a7a8f;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{padding:4px 12px;border-radius:14px;font-size:11px;font-weight:500}
+.tag-theme{background:#1a6b54;color:#ffffff}.tag-action{background:#7a5a0a;color:#ffffff}
+.tag-red{background:rgba(248,113,113,.1);color:#f87171}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.filter-btn{padding:6px 14px;border-radius:18px;font-size:11px;border:none;cursor:pointer;font-family:inherit;transition:all .15s;font-weight:500}
+.filter-btn.active{background:#1a6b54;color:#ffffff;font-weight:600}
+.filter-btn:not(.active){background:#1a2736;color:#6b8399}
+.filter-btn:not(.active):hover{background:#1e3040;color:#4ade94}
+.comp-card{background:#151f2b;border-radius:12px;padding:14px 18px;margin-bottom:10px;border:1px solid #1e2d3d;cursor:pointer;transition:border-color .15s}
+.comp-card:hover{border-color:#2a3f52}
+.comp-row{display:flex;align-items:center;gap:14px}
+.comp-name{font-size:13px;font-weight:600;color:#e0eaf0}
+.bar-bg{background:#1a2736;border-radius:6px;height:6px;width:100%;overflow:hidden;margin-top:6px}
+.bar-fill{height:100%;border-radius:6px;transition:width .4s}
+.comp-score{font-size:22px;font-weight:700;min-width:50px;text-align:right}
+.comp-detail{margin-top:10px;padding:12px 14px;border-radius:10px;font-size:12px;display:none;line-height:1.6}
+.comp-detail.open{display:block}
+.gap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:14px}
+.gap-card{background:#151f2b;border-radius:12px;padding:14px 16px;border:1px solid #1e2d3d}
+.gap-card-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.gap-item{font-size:11px;color:#7a9aad;padding:2px 0}.gap-item.limited{color:#3a4f5f}
+.trend-row{background:#151f2b;border-radius:12px;padding:14px 18px;margin-bottom:10px;border:1px solid #1e2d3d;display:flex;align-items:center;gap:14px}
+.trend-row.warn{border-color:#7f1d1d}
+.trend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-top:12px}
+.trend-mini{background:#151f2b;border-radius:10px;padding:10px 14px;border:1px solid #1e2d3d;display:flex;align-items:center;gap:10px}
+.tier-card{background:#151f2b;border-radius:14px;padding:18px 20px;margin-bottom:12px;border:1px solid #1e2d3d}
+.tier-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.tier-badge{padding:4px 12px;border-radius:12px;font-size:11px;font-weight:700}
+.tier-rep{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #1a2736}
+.tier-rep:last-child{border-bottom:none}
+.tier-detail{font-size:11px;color:#94aab8;margin-top:3px;line-height:1.5}
+.vol-bar{display:flex;gap:2px;align-items:flex-end;height:32px}
+.vol-seg{border-radius:2px;min-width:18px;text-align:center;font-size:8px;color:#fff;line-height:1;padding-top:2px}
+.search-result{background:#151f2b;border-radius:14px;padding:24px;border:1px solid #1e2d3d;margin-bottom:16px}
+.search-result h2{font-size:18px;font-weight:700;color:#4ade94;margin-bottom:4px}
+.search-result .sub{font-size:12px;color:#5a7a8f;margin-bottom:20px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+.stat-box{background:#1a2736;border-radius:10px;padding:14px;text-align:center}
+.stat-box-val{font-size:22px;font-weight:700}.stat-box-label{font-size:10px;color:#5a7a8f;margin-top:3px;text-transform:uppercase;letter-spacing:.4px}
+.footer{text-align:center;padding:28px 20px;color:#3a4f5f;font-size:11px}
+.spark{flex-shrink:0}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:64px;margin-top:16px}
+.bar-col{flex:1;text-align:center}.bar-fill-v{border-radius:5px 5px 0 0;transition:height .3s;min-height:8px}
+.bar-val{font-size:11px;font-weight:600;margin-top:4px}.bar-lbl{font-size:9px;color:#4a6275;margin-top:1px}
+::-webkit-scrollbar{height:6px;width:6px}::-webkit-scrollbar-track{background:#151f2b;border-radius:3px}::-webkit-scrollbar-thumb{background:#2a3f52;border-radius:3px}
 </style>
 </head>
 <body>
-
-<header>
-  <div class="header-left">
-    <h1>Meevo Sales Onboarding <em>Dashboard</em></h1>
-    <p>New Hire Program · 3-Week Curriculum · April 2026</p>
+<div class="header">
+  <div class="logo-area">
+    <svg width="110" height="34" viewBox="0 0 110 34" xmlns="http://www.w3.org/2000/svg"><rect width="110" height="34" rx="6" fill="#4ade94"/><text x="55" y="22" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="15" font-weight="700" fill="#0f1923" letter-spacing="2">MEEVO</text></svg>
+    <div><div class="header-title">Sales Onboarding — Enablement Dashboard</div><div class="header-sub">Q1 2026 · 22 Reps · 8 Coaching Frameworks</div></div>
   </div>
-  <div class="stats-row">
-    <div class="stat"><div class="stat-num">15</div><div class="stat-label">Training Days</div></div>
-    <div class="stat"><div class="stat-num">20</div><div class="stat-label">Sales Modules</div></div>
-    <div class="stat"><div class="stat-num">7</div><div class="stat-label">Product Modules</div></div>
-    <div class="stat"><div class="stat-num">19</div><div class="stat-label">Slide Decks</div></div>
-  </div>
-</header>
-
-<div class="tabs-bar">
-  <button class="tab-btn active" data-tab="week1">Week 1 — Foundations</button>
-  <button class="tab-btn" data-tab="week2">Week 2 — Skills</button>
-  <button class="tab-btn" data-tab="week3">Week 3 — Application</button>
-  <button class="tab-btn" data-tab="attendees">Attendees</button>
-  <button class="tab-btn" data-tab="modules">Enablement Modules</button>
-  <button class="tab-btn" data-tab="product">SE Product Modules</button>
+  <input class="global-search" id="globalSearch" placeholder="Search any rep by name..." autocomplete="off"/>
 </div>
-
-<!-- WEEK 1 -->
-<div class="tab-content active" id="tab-week1"><div class="week-container">
-  <div class="week-hero"><span class="week-tag w1">Week 1</span><span class="week-focus"><strong>Focus:</strong> Company Onboarding, Meevo Product Essentials, Sales Foundations &amp; Mindset</span></div>
-  <div class="day-block"><div class="day-header"><span class="day-pill">Day 1 · Monday, April 6</span><div class="day-line"></div></div>
-  <table class="sessions-table"><thead><tr><th>Time</th><th>Session</th><th>Dept</th><th>Format</th><th>Facilitator</th><th>Materials</th></tr></thead><tbody>
-    <tr class="session-row"><td>9:00–9:45 AM</td><td class="session-title">HR Welcome &amp; Benefits Overview</td><td><span class="dept-badge dept-HR">HR</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>HR Team</td><td>—</td></tr>
-    <tr class="session-row"><td>9:45–10:30 AM</td><td class="session-title">IT Setup: Laptop, Accounts, Access &amp; Security</td><td><span class="dept-badge dept-IT">IT</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>IT Team</td><td>—</td></tr>
-    <tr class="session-row"><td>10:30–11:30 AM</td><td class="session-title">Training Welcome: Intro to Meevo, MSI &amp; Company Culture</td><td><span class="dept-badge dept-EDU">EDU/CX</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>All Facilitators</td><td>—</td></tr>
-    <tr class="session-row"><td>11:30 AM–12:15 PM</td><td class="session-title">OneNote Setup &amp; Training Expectations</td><td><span class="dept-badge dept-CX">CX</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Eileen</td><td>—</td></tr>
-    <tr class="session-row"><td>12:15–12:45 PM</td><td class="session-title">HR Paylocity &amp; Payroll Setup</td><td><span class="dept-badge dept-HR">HR</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>HR Team</td><td>—</td></tr>
-    <tr class="session-row break-row"><td>12:45–1:30 PM</td><td class="session-title">LUNCH</td><td>—</td><td><span class="fmt fmt-BREAK">Break</span></td><td>—</td><td>—</td></tr>
-    <tr class="session-row"><td>1:30–5:15 PM</td><td class="session-title">HIPAA &amp; Sexual Harassment Compliance Training</td><td><span class="dept-badge dept-HR">HR</span></td><td><span class="fmt fmt-Self-Guided">Self-Guided</span></td><td>Self-Paced</td><td>—</td></tr>
-    <tr class="session-row"><td>5:15–5:30 PM</td><td class="session-title">End of Day Huddle</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-  </tbody></table></div>
-  <div class="day-block"><div class="day-header"><span class="day-pill">Day 2 · Tuesday, April 7</span><div class="day-line"></div></div>
-  <table class="sessions-table"><thead><tr><th>Time</th><th>Session</th><th>Dept</th><th>Format</th><th>Facilitator</th><th>Materials</th></tr></thead><tbody>
-    <tr class="session-row"><td>9:45–10:00 AM</td><td class="session-title">Morning Huddle</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>10:00–11:00 AM</td><td class="session-title">Industry Overview: Beauty &amp; Wellness Landscape</td><td><span class="dept-badge dept-EDU">EDU</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Lindsay</td><td>—</td></tr>
-    <tr class="session-row"><td>11:00 AM–12:00 PM</td><td class="session-title">MEEVO PRODUCT: Business Setup, Services &amp; Scheduling<small>SE-Led · Module P1</small></td><td><span class="dept-badge dept-PRODUCT">PRODUCT</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>SE</td><td>—</td></tr>
-    <tr class="session-row"><td>12:00–1:00 PM</td><td class="session-title">Who We Are &amp; Why Meevo Wins<small>Enablement Module 1</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Who_We_Are_Why_Meevo_Wins.pptx">▶ Slides</a></td></tr>
-    <tr class="session-row break-row"><td>1:00–1:45 PM</td><td class="session-title">LUNCH</td><td>—</td><td><span class="fmt fmt-BREAK">Break</span></td><td>—</td><td>—</td></tr>
-    <tr class="session-row"><td>1:45–2:30 PM</td><td class="session-title">Understanding Your ICP<small>Enablement Module 2</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/ICP_Persona_Training_Redesigned.pptx">▶ Slides</a></td></tr>
-    <tr class="session-row"><td>2:30–3:00 PM</td><td class="session-title">Introduction to Sales: Roles, Expectations &amp; Culture</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Leadership</td><td>—</td></tr>
-    <tr class="session-row"><td>3:00–4:00 PM</td><td class="session-title">Shadow a Team Member (SDR or AE)</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Self-Guided">Self-Guided</span></td><td>Assigned Buddy</td><td>—</td></tr>
-    <tr class="session-row"><td>4:00–5:00 PM</td><td class="session-title">Cold Calling Mindset &amp; The Iceberg Model<small>Enablement Module 3</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Cold_Calling_Mindset_Training.pptx">▶ Slides</a></td></tr>
-    <tr class="session-row"><td>5:00–5:30 PM</td><td class="session-title">End of Day Recap</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>5:30–6:30 PM</td><td class="session-title">Self-Study: Call/Demo Review Recordings</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Self-Guided">Self-Guided</span></td><td>Self-Paced</td><td>—</td></tr>
-  </tbody></table></div>
-  <div class="day-block"><div class="day-header"><span class="day-pill">Day 3 · Wednesday, April 8</span><div class="day-line"></div></div>
-  <table class="sessions-table"><thead><tr><th>Time</th><th>Session</th><th>Dept</th><th>Format</th><th>Facilitator</th><th>Materials</th></tr></thead><tbody>
-    <tr class="session-row"><td>9:45–10:00 AM</td><td class="session-title">Morning Huddle</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>10:00–11:00 AM</td><td class="session-title">MEEVO PRODUCT: Employees, Schedules &amp; Client Profiles<small>SE-Led · Module P2</small></td><td><span class="dept-badge dept-PRODUCT">PRODUCT</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>SE</td><td>—</td></tr>
-    <tr class="session-row"><td>11:00 AM–12:00 PM</td><td class="session-title">Competitive Landscape — Know Your Rivals<small>Enablement Module 4</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/SWOT_Analysis_Booking_Software.pptx">▶ Slides</a></td></tr>
-    <tr class="session-row"><td>12:00–1:00 PM</td><td class="session-title">Purpose - Plan - Outcome<small>Enablement Module 5</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Purpose_Plan_Outcome_Training.pptx">▶ Slides</a></td></tr>
-    <tr class="session-row break-row"><td>1:00–1:45 PM</td><td class="session-title">LUNCH</td><td>—</td><td><span class="fmt fmt-BREAK">Break</span></td><td>—</td><td>—</td></tr>
-    <tr class="session-row"><td>1:45–2:45 PM</td><td class="session-title">Sales Enablement Session</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Leadership</td><td>—</td></tr>
-    <tr class="session-row"><td>2:45–3:30 PM</td><td class="session-title">Sales Enablement Session</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td>—</td></tr>
-    <tr class="session-row"><td>3:30–4:30 PM</td><td class="session-title">Shadow a Team Member</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Self-Guided">Self-Guided</span></td><td>Assigned Buddy</td><td>—</td></tr>
-    <tr class="session-row"><td>4:30–5:00 PM</td><td class="session-title">End of Day Recap</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>5:00–6:00 PM</td><td class="session-title">Self-Study: Cold Call Confidence Activities</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Self-Guided">Self-Guided</span></td><td>Self-Paced</td><td>—</td></tr>
-  </tbody></table></div>
-  <div class="day-block"><div class="day-header"><span class="day-pill">Day 4 · Thursday, April 9</span><div class="day-line"></div></div>
-  <table class="sessions-table"><thead><tr><th>Time</th><th>Session</th><th>Dept</th><th>Format</th><th>Facilitator</th><th>Materials</th></tr></thead><tbody>
-    <tr class="session-row"><td>9:45–10:00 AM</td><td class="session-title">Morning Huddle</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>10:00–11:00 AM</td><td class="session-title">Town Hall (Company-Wide)</td><td><span class="dept-badge dept-ALL">ALL</span></td><td><span class="fmt fmt-Meeting">Meeting</span></td><td>Leadership</td><td>—</td></tr>
-    <tr class="session-row"><td>11:00 AM–12:00 PM</td><td class="session-title">MEEVO PRODUCT: Register, Checkout &amp; Payments<small>SE-Led · Module P3</small></td><td><span class="dept-badge dept-PRODUCT">PRODUCT</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>SE</td><td>—</td></tr>
-    <tr class="session-row"><td>12:00–12:45 PM</td><td class="session-title">Customer Service: The Power of Customer Experience</td><td><span class="dept-badge dept-SG">SG</span></td><td><span class="fmt fmt-Self-Guided">Self-Guided</span></td><td>Self-Paced</td><td>—</td></tr>
-    <tr class="session-row break-row"><td>12:45–1:30 PM</td><td class="session-title">LUNCH</td><td>—</td><td><span class="fmt fmt-BREAK">Break</span></td><td>—</td><td>—</td></tr>
-    <tr class="session-row"><td>1:30–2:30 PM</td><td class="session-title">Intro to Prospecting / Pre-Call Research<small>Enablement Module 6</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Intro_to_PreCall_Research.pptx">▶ Slides</a></td></tr>
-    <tr class="session-row"><td>2:30–3:15 PM</td><td class="session-title">Outlook/Email Best Practices &amp; Communication Standards</td><td><span class="dept-badge dept-CX">CX</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Eileen/Devlin</td><td>—</td></tr>
-    <tr class="session-row"><td>3:15–4:00 PM</td><td class="session-title">Sales Enablement Session</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td>—</td></tr>
-    <tr class="session-row"><td>4:00–5:00 PM</td><td class="session-title">Voicemails That Convert<small>Enablement Module 7</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Voicemails_That_Convert.pptx">▶ Slides</a></td></tr>
-    <tr class="session-row"><td>5:00–5:30 PM</td><td class="session-title">End of Day Recap</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-  </tbody></table></div>
-  <div class="day-block"><div class="day-header"><span class="day-pill">Day 5 · Friday, April 10</span><div class="day-line"></div></div>
-  <table class="sessions-table"><thead><tr><th>Time</th><th>Session</th><th>Dept</th><th>Format</th><th>Facilitator</th><th>Materials</th></tr></thead><tbody>
-    <tr class="session-row"><td>9:45–10:00 AM</td><td class="session-title">Morning Huddle</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>10:00–11:00 AM</td><td class="session-title">MEEVO PRODUCT: Security, Payroll &amp; Reports<small>SE-Led · Module P4</small></td><td><span class="dept-badge dept-PRODUCT">PRODUCT</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>SE</td><td>—</td></tr>
-    <tr class="session-row"><td>11:00 AM–12:00 PM</td><td class="session-title">Cold Email Frameworks<small>Enablement Module 8</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Cold_Email_Frameworks_Training.pptx">▶ Slides</a></td></tr>
-    <tr class="session-row"><td>12:00–1:00 PM</td><td class="session-title">Gatekeeper Strategy<small>Enablement Module 9</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Gatekeeper_Strategy.pptx">▶ Slides</a></td></tr>
-    <tr class="session-row break-row"><td>1:00–1:45 PM</td><td class="session-title">LUNCH</td><td>—</td><td><span class="fmt fmt-BREAK">Break</span></td><td>—</td><td>—</td></tr>
-    <tr class="session-row"><td>1:45–2:30 PM</td><td class="session-title">Agenda Setting &amp; Rapport Building on Calls<small>Enablement Module 10</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Agenda_Rapport_Training.pptx">▶ Slides</a></td></tr>
-    <tr class="session-row"><td>2:30–3:30 PM</td><td class="session-title">Shadow a Team Member</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Self-Guided">Self-Guided</span></td><td>Assigned Buddy</td><td>—</td></tr>
-    <tr class="session-row"><td>3:30–4:30 PM</td><td class="session-title">Week 1 Knowledge Check &amp; Reflection</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Assessment">Assessment</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>4:30–5:00 PM</td><td class="session-title">End of Day Recap &amp; Weekend Assignments</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>5:00–6:00 PM</td><td class="session-title">Self-Study: Call/Demo Review Recordings</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Self-Guided">Self-Guided</span></td><td>Self-Paced</td><td>—</td></tr>
-  </tbody></table></div>
-</div></div>
-
-<!-- WEEK 2 -->
-<div class="tab-content" id="tab-week2"><div class="week-container">
-  <div class="week-hero"><span class="week-tag w2">Week 2</span><span class="week-focus"><strong>Focus:</strong> Objection Handling, Tools &amp; Tech Stack, Competitive Intel, Discovery Skills</span></div>
-  <div class="day-block"><div class="day-header"><span class="day-pill">Day 6 · Monday, April 13</span><div class="day-line"></div></div>
-  <table class="sessions-table"><thead><tr><th>Time</th><th>Session</th><th>Dept</th><th>Format</th><th>Facilitator</th><th>Materials</th></tr></thead><tbody>
-    <tr class="session-row"><td>9:45–10:00 AM</td><td class="session-title">Morning Huddle</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>10:00–11:00 AM</td><td class="session-title">MEEVO PRODUCT: Goals, Packages &amp; Memberships<small>SE-Led</small></td><td><span class="dept-badge dept-PRODUCT">PRODUCT</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>SE</td><td>—</td></tr>
-    <tr class="session-row"><td>11:00 AM–12:00 PM</td><td class="session-title">Objection Handling<small>Enablement Module 11</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Objection_Handling_Mastery.pptx">▶ Slides</a></td></tr>
-    <tr class="session-row break-row"><td>1:00–1:45 PM</td><td class="session-title">LUNCH</td><td>—</td><td><span class="fmt fmt-BREAK">Break</span></td><td>—</td><td>—</td></tr>
-    <tr class="session-row"><td>1:45–2:45 PM</td><td class="session-title">AE / SDR Enablement Meeting (Join Live Session)</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Meeting">Meeting</span></td><td>All Sales</td><td>—</td></tr>
-    <tr class="session-row"><td>2:45–3:45 PM</td><td class="session-title">Tech Stack Intro: Salesforce, Outreach.io &amp; Clay</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>3:45–5:00 PM</td><td class="session-title">Salesforce Hands-On: Navigation, Accounts &amp; Contacts</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://millenniumsi--uat.sandbox.my.salesforce.com/">▶ SF UAT</a></td></tr>
-    <tr class="session-row"><td>5:00–5:30 PM</td><td class="session-title">End of Day Recap</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>5:30–6:30 PM</td><td class="session-title">Self-Study: Outreach Training Videos</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Self-Guided">Self-Guided</span></td><td>Self-Paced</td><td>—</td></tr>
-  </tbody></table></div>
-  <div class="day-block"><div class="day-header"><span class="day-pill">Day 7 · Tuesday, April 14</span><div class="day-line"></div></div>
-  <table class="sessions-table"><thead><tr><th>Time</th><th>Session</th><th>Dept</th><th>Format</th><th>Facilitator</th><th>Materials</th></tr></thead><tbody>
-    <tr class="session-row"><td>9:45–10:00 AM</td><td class="session-title">Morning Huddle</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>10:00–11:00 AM</td><td class="session-title">MEEVO PRODUCT: Online Booking, eGift &amp; Client Points<small>TSE-Led</small></td><td><span class="dept-badge dept-PRODUCT">PRODUCT</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>SE</td><td>—</td></tr>
-    <tr class="session-row"><td>11:00 AM–12:00 PM</td><td class="session-title">Introduction to Enterprise Accounts<small>Enablement Module 12</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Intro_to_Enterprise_Accounts.pptx">▶ Slides</a></td></tr>
-    <tr class="session-row"><td>12:00–1:00 PM</td><td class="session-title">Customer Service: The Trusted Advisor</td><td><span class="dept-badge dept-SG">SG</span></td><td><span class="fmt fmt-Self-Guided">Self-Guided</span></td><td>Self-Paced</td><td>—</td></tr>
-    <tr class="session-row break-row"><td>1:00–1:45 PM</td><td class="session-title">LUNCH</td><td>—</td><td><span class="fmt fmt-BREAK">Break</span></td><td>—</td><td>—</td></tr>
-    <tr class="session-row"><td>1:45–2:45 PM</td><td class="session-title">Sales Enablement Session</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td>—</td></tr>
-    <tr class="session-row"><td>2:45–3:45 PM</td><td class="session-title">Shadow a Team Member (Extended)</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Self-Guided">Self-Guided</span></td><td>Assigned Buddy</td><td>—</td></tr>
-    <tr class="session-row"><td>3:45–4:45 PM</td><td class="session-title">Sales Enablement Session</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td>—</td></tr>
-    <tr class="session-row"><td>4:45–5:30 PM</td><td class="session-title">End of Day Recap</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>5:30–6:30 PM</td><td class="session-title">Self-Study: Outreach Training Videos</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Self-Guided">Self-Guided</span></td><td>Self-Paced</td><td>—</td></tr>
-  </tbody></table></div>
-  <div class="day-block"><div class="day-header"><span class="day-pill">Day 8 · Wednesday, April 15</span><div class="day-line"></div></div>
-  <table class="sessions-table"><thead><tr><th>Time</th><th>Session</th><th>Dept</th><th>Format</th><th>Facilitator</th><th>Materials</th></tr></thead><tbody>
-    <tr class="session-row"><td>9:45–10:00 AM</td><td class="session-title">Morning Huddle</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>10:00–11:00 AM</td><td class="session-title">MEEVO PRODUCT: Marketing Suite, OPM &amp; Communications<small>TSE-Led</small></td><td><span class="dept-badge dept-PRODUCT">PRODUCT</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>SE</td><td>—</td></tr>
-    <tr class="session-row"><td>11:00 AM–12:00 PM</td><td class="session-title">Sales Enablement Session</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td>—</td></tr>
-    <tr class="session-row"><td>12:00–1:00 PM</td><td class="session-title">MeevoTips &amp; MeevoPay Overview</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Product Team</td><td>—</td></tr>
-    <tr class="session-row break-row"><td>1:00–1:45 PM</td><td class="session-title">LUNCH</td><td>—</td><td><span class="fmt fmt-BREAK">Break</span></td><td>—</td><td>—</td></tr>
-    <tr class="session-row"><td>1:45–4:45 PM</td><td class="session-title">Sales Enablement Sessions (x3)</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td>—</td></tr>
-    <tr class="session-row"><td>4:45–5:30 PM</td><td class="session-title">End of Day Recap</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>5:30–6:30 PM</td><td class="session-title">Self-Study: Demo/Call Review</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Self-Guided">Self-Guided</span></td><td>Self-Paced</td><td>—</td></tr>
-  </tbody></table></div>
-  <div class="day-block"><div class="day-header"><span class="day-pill">Day 9 · Thursday, April 16</span><div class="day-line"></div></div>
-  <table class="sessions-table"><thead><tr><th>Time</th><th>Session</th><th>Dept</th><th>Format</th><th>Facilitator</th><th>Materials</th></tr></thead><tbody>
-    <tr class="session-row"><td>9:45–10:00 AM</td><td class="session-title">Morning Huddle</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>10:00–11:00 AM</td><td class="session-title">MEEVO PRODUCT: Reporting, Dashboards &amp; Smart Centers<small>TSE-Led</small></td><td><span class="dept-badge dept-PRODUCT">PRODUCT</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>SE</td><td>—</td></tr>
-    <tr class="session-row"><td>11:00 AM–12:00 PM</td><td class="session-title">Pain-to-Feature Mapping — Meevo Value Props<small>Enablement Module 13</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Pain_to_Feature_Mapping.pptx">▶ Slides</a></td></tr>
-    <tr class="session-row"><td>12:00–12:30 PM</td><td class="session-title">Customer Service: The Customer Service Revolution</td><td><span class="dept-badge dept-SG">SG</span></td><td><span class="fmt fmt-Self-Guided">Self-Guided</span></td><td>Self-Paced</td><td>—</td></tr>
-    <tr class="session-row"><td>12:30–1:00 PM</td><td class="session-title">Handling Client Cancellation Conversations</td><td><span class="dept-badge dept-SG">SG</span></td><td><span class="fmt fmt-Self-Guided">Self-Guided</span></td><td>Self-Paced</td><td>—</td></tr>
-    <tr class="session-row break-row"><td>1:00–1:45 PM</td><td class="session-title">LUNCH</td><td>—</td><td><span class="fmt fmt-BREAK">Break</span></td><td>—</td><td>—</td></tr>
-    <tr class="session-row"><td>1:45–3:15 PM</td><td class="session-title">Salesforce Deep Dive: Stages, Dispositions &amp; Pipeline</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td>—</td></tr>
-    <tr class="session-row"><td>3:15–4:15 PM</td><td class="session-title">Outreach.io Setup &amp; Sequence Building</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>4:15–5:00 PM</td><td class="session-title">End of Day Recap</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>5:00–6:00 PM</td><td class="session-title">Self-Study: Salesforce Exercises in UAT</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Self-Guided">Self-Guided</span></td><td>Self-Paced</td><td>—</td></tr>
-  </tbody></table></div>
-  <div class="day-block"><div class="day-header"><span class="day-pill">Day 10 · Friday, April 17</span><div class="day-line"></div></div>
-  <table class="sessions-table"><thead><tr><th>Time</th><th>Session</th><th>Dept</th><th>Format</th><th>Facilitator</th><th>Materials</th></tr></thead><tbody>
-    <tr class="session-row"><td>9:45–10:00 AM</td><td class="session-title">Morning Huddle</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>10:00–11:00 AM</td><td class="session-title">MEEVO PRODUCT: Inventory, Waitlist &amp; Business Boosters<small>TSE-Led</small></td><td><span class="dept-badge dept-PRODUCT">PRODUCT</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>SE</td><td>—</td></tr>
-    <tr class="session-row"><td>11:00 AM–12:00 PM</td><td class="session-title">Objection Role-Play — Live Practice &amp; Coaching<small>Enablement Module 14</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Objection_RolePlay_Training.pptx">▶ Slides</a></td></tr>
-    <tr class="session-row"><td>12:00–1:00 PM</td><td class="session-title">Business Boosters, Partners &amp; Integrations</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Product Team</td><td>—</td></tr>
-    <tr class="session-row break-row"><td>1:00–2:00 PM</td><td class="session-title">LUNCH</td><td>—</td><td><span class="fmt fmt-BREAK">Break</span></td><td>—</td><td>—</td></tr>
-    <tr class="session-row"><td>2:00–3:00 PM</td><td class="session-title">All Sales Meeting (Join Live)</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Meeting">Meeting</span></td><td>All Sales</td><td>—</td></tr>
-    <tr class="session-row"><td>3:00–4:00 PM</td><td class="session-title">Sales Enablement Session</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td>—</td></tr>
-    <tr class="session-row"><td>4:00–4:30 PM</td><td class="session-title">Week 2 Knowledge Check &amp; Reflection</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Assessment">Assessment</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>4:30–5:00 PM</td><td class="session-title">End of Day Recap &amp; Weekend Assignments</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>5:00–6:00 PM</td><td class="session-title">Self-Study: Business Boosters Exercise &amp; Demo/Call Review</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Self-Guided">Self-Guided</span></td><td>Self-Paced</td><td>—</td></tr>
-  </tbody></table></div>
-</div></div>
-
-<!-- WEEK 3 -->
-<div class="tab-content" id="tab-week3"><div class="week-container">
-  <div class="week-hero"><span class="week-tag w3">Week 3</span><span class="week-focus"><strong>Focus:</strong> Role-Plays, Demo Skills, Advanced Techniques, Mock Calls, Graduation</span></div>
-  <div class="day-block"><div class="day-header"><span class="day-pill">Day 11 · Monday, April 20</span><div class="day-line"></div></div>
-  <table class="sessions-table"><thead><tr><th>Time</th><th>Session</th><th>Dept</th><th>Format</th><th>Facilitator</th><th>Materials</th></tr></thead><tbody>
-    <tr class="session-row"><td>9:45–10:00 AM</td><td class="session-title">Morning Huddle</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>10:00–11:00 AM</td><td class="session-title">MEEVO PRODUCT: Frequency of Visit, Smart Pricing &amp; Provider Goals<small>TSE-Led</small></td><td><span class="dept-badge dept-PRODUCT">PRODUCT</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>TSE</td><td>—</td></tr>
-    <tr class="session-row"><td>11:00 AM–12:00 PM</td><td class="session-title">SPIN Selling Fundamentals<small>Enablement Module 15</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/SPIN_Selling_Methodology_Meevo.pptx">▶ Slides</a></td></tr>
-    <tr class="session-row"><td>12:00–1:00 PM</td><td class="session-title">Sales Enablement Session</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td>—</td></tr>
-    <tr class="session-row break-row"><td>1:00–1:45 PM</td><td class="session-title">LUNCH</td><td>—</td><td><span class="fmt fmt-BREAK">Break</span></td><td>—</td><td>—</td></tr>
-    <tr class="session-row"><td>1:45–3:00 PM</td><td class="session-title">SDR: Supervised Cold Call Dial Session | AE: Demo Prep &amp; Agenda Setting</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Practice">Practice</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>3:00–5:00 PM</td><td class="session-title">SDR: Continue Dials + Coaching<small>Enablement Module 16</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Practice">Practice</span></td><td>Sales Enablement</td><td>—</td></tr>
-    <tr class="session-row"><td>5:00–5:30 PM</td><td class="session-title">End of Day Recap</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-  </tbody></table></div>
-  <div class="day-block"><div class="day-header"><span class="day-pill">Day 12 · Tuesday, April 21</span><div class="day-line"></div></div>
-  <table class="sessions-table"><thead><tr><th>Time</th><th>Session</th><th>Dept</th><th>Format</th><th>Facilitator</th><th>Materials</th></tr></thead><tbody>
-    <tr class="session-row"><td>9:45–10:00 AM</td><td class="session-title">Morning Huddle</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>10:00–11:00 AM</td><td class="session-title">Outreach Sequences — Multi-Touch Cadence Design</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>11:00 AM–12:00 PM</td><td class="session-title">Social Selling — LinkedIn &amp; Research Techniques<small>Enablement Module 17</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Social_Selling_LinkedIn.pptx">▶ Slides</a></td></tr>
-    <tr class="session-row"><td>12:00–1:00 PM</td><td class="session-title">Data Enrichment &amp; Account Scoring with Clay</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row break-row"><td>1:00–1:45 PM</td><td class="session-title">LUNCH</td><td>—</td><td><span class="fmt fmt-BREAK">Break</span></td><td>—</td><td>—</td></tr>
-    <tr class="session-row"><td>1:45–3:00 PM</td><td class="session-title">SDR: Build Tiered Dial Lists | AE: Tailoring Demo to Owner vs. Manager</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Practice">Practice</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>3:00–5:00 PM</td><td class="session-title">SDR: Supervised Dials + Coaching | AE: Mock Demo Practice</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Practice">Practice</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>5:00–5:30 PM</td><td class="session-title">End of Day Recap</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-  </tbody></table></div>
-  <div class="day-block"><div class="day-header"><span class="day-pill">Day 13 · Wednesday, April 22</span><div class="day-line"></div></div>
-  <table class="sessions-table"><thead><tr><th>Time</th><th>Session</th><th>Dept</th><th>Format</th><th>Facilitator</th><th>Materials</th></tr></thead><tbody>
-    <tr class="session-row"><td>9:45–10:00 AM</td><td class="session-title">Morning Huddle</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>10:00–11:00 AM</td><td class="session-title">Introduction to Attention<small>Enablement Module 19 — Group Coaching</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Attention_Platform_Training_Guide.pptx">▶ Slides</a></td></tr>
-    <tr class="session-row"><td>11:00 AM–1:00 PM</td><td class="session-title">Sales Enablement Sessions (x2)</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td>—</td></tr>
-    <tr class="session-row break-row"><td>1:00–1:45 PM</td><td class="session-title">LUNCH</td><td>—</td><td><span class="fmt fmt-BREAK">Break</span></td><td>—</td><td>—</td></tr>
-    <tr class="session-row"><td>1:45–3:00 PM</td><td class="session-title">SDR: Supervised Dial Session | AE: Closing Techniques</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Practice">Practice</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>3:00–5:00 PM</td><td class="session-title">SDR: Dials + Objection Practice | AE: ROI Conversations</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Practice">Practice</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>5:00–5:30 PM</td><td class="session-title">End of Day Recap</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-  </tbody></table></div>
-  <div class="day-block"><div class="day-header"><span class="day-pill">Day 14 · Thursday, April 23</span><div class="day-line"></div></div>
-  <table class="sessions-table"><thead><tr><th>Time</th><th>Session</th><th>Dept</th><th>Format</th><th>Facilitator</th><th>Materials</th></tr></thead><tbody>
-    <tr class="session-row"><td>9:45–10:00 AM</td><td class="session-title">Morning Huddle</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>10:00 AM–12:00 PM</td><td class="session-title">Meevo Product Final Assessment (All Roles)</td><td><span class="dept-badge dept-PRODUCT">PRODUCT</span></td><td><span class="fmt fmt-Assessment">Assessment</span></td><td>SE + EDU</td><td>—</td></tr>
-    <tr class="session-row"><td>12:00–1:00 PM</td><td class="session-title">SDR-to-AE Handoff — Setting Demos Up for Success<small>Enablement Module 18</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/SDR_to_AE_Handoff.pptx">▶ Slides</a></td></tr>
-    <tr class="session-row break-row"><td>1:00–1:45 PM</td><td class="session-title">LUNCH</td><td>—</td><td><span class="fmt fmt-BREAK">Break</span></td><td>—</td><td>—</td></tr>
-    <tr class="session-row"><td>1:45–3:00 PM</td><td class="session-title">SDR: Mock Cold Call — Assessed | AE: Mock Demo — Assessed</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Assessment">Assessment</span></td><td>Sales Leadership</td><td>—</td></tr>
-    <tr class="session-row"><td>3:00–4:00 PM</td><td class="session-title">Call Recording Review: Group Coaching Session</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td>—</td></tr>
-    <tr class="session-row"><td>4:00–5:00 PM</td><td class="session-title">Pipeline Setup: Build Your First Week's Targets &amp; Sequences</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Ops</td><td>—</td></tr>
-    <tr class="session-row"><td>5:00–5:30 PM</td><td class="session-title">End of Day Recap</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-  </tbody></table></div>
-  <div class="day-block"><div class="day-header"><span class="day-pill">Day 15 · Friday, April 24 — 🎓 Graduation</span><div class="day-line"></div></div>
-  <table class="sessions-table"><thead><tr><th>Time</th><th>Session</th><th>Dept</th><th>Format</th><th>Facilitator</th><th>Materials</th></tr></thead><tbody>
-    <tr class="session-row"><td>9:45–10:00 AM</td><td class="session-title">Morning Huddle</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row"><td>10:00–11:00 AM</td><td class="session-title">Time Management<small>Enablement Module 20</small></td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Time_Management_for_Sales.pptx">▶ Slides</a></td></tr>
-    <tr class="session-row"><td>11:00 AM–12:00 PM</td><td class="session-title">Sales Enablement Session</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td>—</td></tr>
-    <tr class="session-row"><td>12:00–1:00 PM</td><td class="session-title">30/60/90 Day Goal Setting with Your Manager</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Manager</td><td>—</td></tr>
-    <tr class="session-row break-row"><td>1:00–1:45 PM</td><td class="session-title">LUNCH</td><td>—</td><td><span class="fmt fmt-BREAK">Break</span></td><td>—</td><td>—</td></tr>
-    <tr class="session-row"><td>1:45–3:00 PM</td><td class="session-title">🎓 Graduation: Onboarding Completion Assessment &amp; Feedback</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Assessment">Assessment</span></td><td>Sales Leadership</td><td>—</td></tr>
-    <tr class="session-row"><td>3:00–4:00 PM</td><td class="session-title">Meet Your Ongoing Enablement Calendar &amp; What's Next</td><td><span class="dept-badge dept-SALES">SALES</span></td><td><span class="fmt fmt-Proctored">Proctored</span></td><td>Sales Enablement</td><td>—</td></tr>
-    <tr class="session-row"><td>4:00–5:00 PM</td><td class="session-title">🎉 Celebration &amp; Welcome to the Team!</td><td><span class="dept-badge dept-ALL">ALL</span></td><td><span class="fmt fmt-Social">Social</span></td><td>All Sales</td><td>—</td></tr>
-  </tbody></table></div>
-</div></div>
-
-<!-- ATTENDEES -->
-<div class="tab-content" id="tab-attendees"><div class="attendees-container">
-  <div class="attend-hero">
-    <div class="attend-hero-left"><h2>Attendee Tracking</h2><p>Module-by-module attendance log — Sales Enablement sessions</p></div>
-    <div class="attend-stats">
-      <div class="attend-stat"><div class="attend-stat-num">20</div><div class="attend-stat-label">Modules</div></div>
-      <div class="attend-stat"><div class="attend-stat-num">3</div><div class="attend-stat-label">Weeks</div></div>
-      <div class="attend-stat"><div class="attend-stat-num">1</div><div class="attend-stat-label">Cohort</div></div>
-    </div>
-  </div>
-  <table class="attend-table">
-    <thead><tr><th>#</th><th>Session Title &amp; Description</th><th>Week / Day</th><th>Date</th><th>Attended By</th></tr></thead>
-    <tbody>
-      <tr class="attend-row"><td>1</td><td><div class="attend-title">Who We Are &amp; Why Meevo Wins</div><div class="attend-desc">Who Meevo is, the market we serve, and what sets us apart. Clear understanding of our value proposition and why growing beauty and wellness businesses choose Meevo.</div></td><td><span class="attend-week-tag atag-w1">Week 1 · Day 2</span></td><td class="attend-date">—</td><td><span class="attend-name">Jeremy Sexton</span></td></tr>
-      <tr class="attend-row"><td>2</td><td><div class="attend-title">Understanding Your ICP</div><div class="attend-desc">Defines Meevo's Ideal Customer Profile. Identify high-fit salons, spas, and med-spas based on size, complexity, and growth stage.</div></td><td><span class="attend-week-tag atag-w1">Week 1 · Day 2</span></td><td class="attend-date">—</td><td><span class="attend-name">Jeremy Sexton</span></td></tr>
-      <tr class="attend-row"><td>3</td><td><div class="attend-title">Cold Calling Mindset &amp; The Iceberg Model</div><div class="attend-desc">Builds the foundation for confident, effective cold calling by strengthening mindset and emotional control.</div></td><td><span class="attend-week-tag atag-w1">Week 1 · Day 2</span></td><td class="attend-date">Mar 12, 2026</td><td><span class="attend-name">Jeremy Sexton</span></td></tr>
-      <tr class="attend-row"><td>4</td><td><div class="attend-title">Competitive Landscape — Know Your Rivals</div><div class="attend-desc">Explores Meevo's competitive landscape. Position against competitors by understanding their strengths, weaknesses, and common objections.</div></td><td><span class="attend-week-tag atag-w1">Week 1 · Day 3</span></td><td class="attend-date">—</td><td><span class="attend-name">Jeremy Sexton</span></td></tr>
-      <tr class="attend-row"><td>5</td><td><div class="attend-title">Purpose - Plan - Outcome</div><div class="attend-desc">Introduces the Purpose–Plan–Outcome framework for running structured, effective sales conversations.</div></td><td><span class="attend-week-tag atag-w1">Week 1 · Day 3</span></td><td class="attend-date">Mar 13, 2026</td><td><span class="attend-name">Jeremy Sexton</span></td></tr>
-      <tr class="attend-row"><td>6</td><td><div class="attend-title">Intro to Prospecting &amp; Pre-Call Research</div><div class="attend-desc">Fundamentals of prospecting and effective pre-call research. Identify high-fit accounts and prepare for meaningful outreach.</div></td><td><span class="attend-week-tag atag-w1">Week 1 · Day 4</span></td><td class="attend-date">—</td><td><span class="attend-name">Jeremy Sexton</span></td></tr>
-      <tr class="attend-row"><td>7</td><td><div class="attend-title">Voicemails That Convert</div><div class="attend-desc">How to craft concise, compelling voicemails that spark callbacks. Structure, tone, and messaging that create curiosity without over-selling.</div></td><td><span class="attend-week-tag atag-w1">Week 1 · Day 4</span></td><td class="attend-date">—</td><td><span class="attend-name">Jeremy Sexton</span></td></tr>
-      <tr class="attend-row"><td>8</td><td><div class="attend-title">Cold Email Frameworks</div><div class="attend-desc">Proven cold email frameworks designed to drive replies and booked meetings. Concise, personalized messages focused on relevance and value.</div></td><td><span class="attend-week-tag atag-w1">Week 1 · Day 5</span></td><td class="attend-date">—</td><td><span class="attend-empty">Not recorded</span></td></tr>
-      <tr class="attend-row"><td>9</td><td><div class="attend-title">Gatekeeper Strategy</div><div class="attend-desc">Strategies to confidently navigate gatekeepers and reach decision-makers. Position yourself with credibility and handle common pushbacks.</div></td><td><span class="attend-week-tag atag-w1">Week 1 · Day 5</span></td><td class="attend-date">—</td><td><span class="attend-name">Jeremy Sexton</span></td></tr>
-      <tr class="attend-row"><td>10</td><td><div class="attend-title">Agenda Setting &amp; Rapport Building on Calls</div><div class="attend-desc">How to set a clear agenda and build authentic rapport at the start of every call. Establish control, comfort, and aligned expectations early.</div></td><td><span class="attend-week-tag atag-w1">Week 1 · Day 5</span></td><td class="attend-date">—</td><td><span class="attend-empty">Not recorded</span></td></tr>
-      <tr class="attend-row"><td>11</td><td><div class="attend-title">Objection Handling</div><div class="attend-desc">Skills to confidently handle objections without becoming defensive. Uncover the real concern, respond with clarity, and guide the conversation forward.</div></td><td><span class="attend-week-tag atag-w2">Week 2 · Day 1</span></td><td class="attend-date">—</td><td><span class="attend-name">Jeremy Sexton</span></td></tr>
-      <tr class="attend-row"><td>12</td><td><div class="attend-title">Introduction to Enterprise Accounts</div><div class="attend-desc">Introduces enterprise accounts and how they differ from SMB. Buying committees, longer cycles, and multi-location complexity change the approach.</div></td><td><span class="attend-week-tag atag-w2">Week 2 · Day 2</span></td><td class="attend-date">—</td><td><span class="attend-empty">Not recorded</span></td></tr>
-      <tr class="attend-row"><td>13</td><td><div class="attend-title">Pain-to-Feature Mapping — Meevo Value Props</div><div class="attend-desc">How to translate customer pain into clear, relevant Meevo value propositions. Connect operational challenges to specific features and outcomes.</div></td><td><span class="attend-week-tag atag-w2">Week 2 · Day 4</span></td><td class="attend-date">—</td><td><span class="attend-empty">Not recorded</span></td></tr>
-      <tr class="attend-row"><td>14</td><td><div class="attend-title">Objection Role-Play — Live Practice &amp; Coaching</div><div class="attend-desc">Live objection role-play with real-time coaching and feedback. Practice responding to common pushbacks using proven frameworks.</div></td><td><span class="attend-week-tag atag-w2">Week 2 · Day 5</span></td><td class="attend-date">—</td><td><span class="attend-name">Jeremy Sexton</span></td></tr>
-      <tr class="attend-row"><td>15</td><td><div class="attend-title">SPIN Selling Fundamentals</div><div class="attend-desc">Core principles of SPIN Selling applied in discovery. Move from Situation to Problem, Implication, and Need-Payoff questions with purpose.</div></td><td><span class="attend-week-tag atag-w3">Week 3 · Day 1</span></td><td class="attend-date">—</td><td><span class="attend-empty">Not recorded</span></td></tr>
-      <tr class="attend-row"><td>16</td><td><div class="attend-title">SDR: Continue Dials + Coaching</div><div class="attend-desc">Reinforces outbound discipline through continued dial blocks with live coaching. Apply frameworks in real time with targeted feedback on tone and structure.</div></td><td><span class="attend-week-tag atag-w3">Week 3 · Day 1</span></td><td class="attend-date">—</td><td><span class="attend-name">Jeremy Sexton</span></td></tr>
-      <tr class="attend-row"><td>17</td><td><div class="attend-title">Social Selling — LinkedIn &amp; Research Techniques</div><div class="attend-desc">Leverage LinkedIn to enhance prospecting effectiveness. Identify decision-makers, uncover insights, and personalize outreach strategically.</div></td><td><span class="attend-week-tag atag-w3">Week 3 · Day 2</span></td><td class="attend-date">—</td><td><span class="attend-empty">Not recorded</span></td></tr>
-      <tr class="attend-row"><td>18</td><td><div class="attend-title">SDR-to-AE Handoff — Setting Demos Up for Success</div><div class="attend-desc">Deliver clean, high-quality handoffs that improve win rates. Capture the right information in notes and set clear demo expectations.</div></td><td><span class="attend-week-tag atag-w3">Week 3 · Day 4</span></td><td class="attend-date">—</td><td><span class="attend-empty">Not recorded</span></td></tr>
-      <tr class="attend-row"><td>19</td><td><div class="attend-title">Call Recording Review: Group Coaching Session</div><div class="attend-desc">Group call reviews using Attention to identify strengths and coaching opportunities. Analyze conversations for structure, questioning, and conversion effectiveness.</div></td><td><span class="attend-week-tag atag-w3">Week 3 · Day 4</span></td><td class="attend-date">—</td><td><span class="attend-empty">Not recorded</span></td></tr>
-      <tr class="attend-row"><td>20</td><td><div class="attend-title">Time Management</div><div class="attend-desc">Practical time management strategies for high-output SDR/AE performance. Structure call blocks, prioritize high-impact activities, minimize distractions.</div></td><td><span class="attend-week-tag atag-w3">Week 3 · Day 5</span></td><td class="attend-date">—</td><td><span class="attend-name">Jeremy Sexton</span></td></tr>
-    </tbody>
-  </table>
-</div></div>
-
-<!-- ENABLEMENT MODULES -->
-<div class="tab-content" id="tab-modules"><div class="modules-grid">
-  <div class="module-card w1"><div class="module-top"><span class="module-num">01</span><span class="module-week-tag wtag-w1">Week 1 · Day 2</span></div><div class="module-title">Who We Are &amp; Why Meevo Wins</div><div class="module-desc">Who Meevo is, the market we serve, and what sets us apart. Clear understanding of our value proposition and why growing beauty and wellness businesses choose Meevo.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Who_We_Are_Why_Meevo_Wins.pptx">▶ Open Slides</a></div></div>
-  <div class="module-card w1"><div class="module-top"><span class="module-num">02</span><span class="module-week-tag wtag-w1">Week 1 · Day 2</span></div><div class="module-title">Understanding Your ICP</div><div class="module-desc">Defines Meevo's Ideal Customer Profile. Identify high-fit salons, spas, and med-spas based on size, complexity, and growth stage.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/ICP_Persona_Training_Redesigned.pptx">▶ Open Slides</a></div></div>
-  <div class="module-card w1"><div class="module-top"><span class="module-num">03</span><span class="module-week-tag wtag-w1">Week 1 · Day 2</span></div><div class="module-title">Cold Calling Mindset &amp; The Iceberg Model</div><div class="module-desc">Builds the foundation for confident, effective cold calling by strengthening mindset and emotional control.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Cold_Calling_Mindset_Training.pptx">▶ Open Slides</a></div></div>
-  <div class="module-card w1"><div class="module-top"><span class="module-num">04</span><span class="module-week-tag wtag-w1">Week 1 · Day 3</span></div><div class="module-title">Competitive Landscape — Know Your Rivals</div><div class="module-desc">Explores Meevo's competitive landscape. Position against competitors by understanding their strengths, weaknesses, and common objections.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/SWOT_Analysis_Booking_Software.pptx">▶ Open Slides</a></div></div>
-  <div class="module-card w1"><div class="module-top"><span class="module-num">05</span><span class="module-week-tag wtag-w1">Week 1 · Day 3</span></div><div class="module-title">Purpose - Plan - Outcome</div><div class="module-desc">Introduces the Purpose–Plan–Outcome framework for running structured, effective sales conversations.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Purpose_Plan_Outcome_Training.pptx">▶ Open Slides</a></div></div>
-  <div class="module-card w1"><div class="module-top"><span class="module-num">06</span><span class="module-week-tag wtag-w1">Week 1 · Day 4</span></div><div class="module-title">Intro to Prospecting &amp; Pre-Call Research</div><div class="module-desc">Fundamentals of prospecting and effective pre-call research. Identify high-fit accounts and prepare for meaningful outreach.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Intro_to_PreCall_Research.pptx">▶ Open Slides</a></div></div>
-  <div class="module-card w1"><div class="module-top"><span class="module-num">07</span><span class="module-week-tag wtag-w1">Week 1 · Day 4</span></div><div class="module-title">Voicemails That Convert</div><div class="module-desc">How to craft concise, compelling voicemails that spark callbacks. Structure, tone, and messaging that create curiosity without over-selling.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Voicemails_That_Convert.pptx">▶ Open Slides</a></div></div>
-  <div class="module-card w1"><div class="module-top"><span class="module-num">08</span><span class="module-week-tag wtag-w1">Week 1 · Day 5</span></div><div class="module-title">Cold Email Frameworks</div><div class="module-desc">Proven cold email frameworks designed to drive replies and booked meetings. Concise, personalized messages that focus on relevance and value.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Cold_Email_Frameworks_Training.pptx">▶ Open Slides</a></div></div>
-  <div class="module-card w1"><div class="module-top"><span class="module-num">09</span><span class="module-week-tag wtag-w1">Week 1 · Day 5</span></div><div class="module-title">Gatekeeper Strategy</div><div class="module-desc">Strategies to confidently navigate gatekeepers and reach decision-makers. Position yourself with credibility and handle common pushbacks.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Gatekeeper_Strategy.pptx">▶ Open Slides</a></div></div>
-  <div class="module-card w1"><div class="module-top"><span class="module-num">10</span><span class="module-week-tag wtag-w1">Week 1 · Day 5</span></div><div class="module-title">Agenda Setting &amp; Rapport Building on Calls</div><div class="module-desc">How to set a clear agenda and build authentic rapport at the start of every call. Establish control, comfort, and aligned expectations early.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Agenda_Rapport_Training.pptx">▶ Open Slides</a></div></div>
-  <div class="module-card w2"><div class="module-top"><span class="module-num">11</span><span class="module-week-tag wtag-w2">Week 2 · Day 1</span></div><div class="module-title">Objection Handling</div><div class="module-desc">Skills to confidently handle objections without becoming defensive. Uncover the real concern, respond with clarity, and guide the conversation forward.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Objection_Handling_Mastery.pptx">▶ Open Slides</a></div></div>
-  <div class="module-card w2"><div class="module-top"><span class="module-num">12</span><span class="module-week-tag wtag-w2">Week 2 · Day 2</span></div><div class="module-title">Introduction to Enterprise Accounts</div><div class="module-desc">Introduces enterprise accounts and how they differ from SMB. Buying committees, longer cycles, and multi-location complexity change the approach.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Intro_to_Enterprise_Accounts.pptx">▶ Open Slides</a></div></div>
-  <div class="module-card w2"><div class="module-top"><span class="module-num">13</span><span class="module-week-tag wtag-w2">Week 2 · Day 4</span></div><div class="module-title">Pain-to-Feature Mapping — Meevo Value Props</div><div class="module-desc">How to translate customer pain into clear, relevant Meevo value propositions. Connect operational challenges to specific features and outcomes.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Pain_to_Feature_Mapping.pptx">▶ Open Slides</a></div></div>
-  <div class="module-card w2"><div class="module-top"><span class="module-num">14</span><span class="module-week-tag wtag-w2">Week 2 · Day 5</span></div><div class="module-title">Objection Role-Play — Live Practice &amp; Coaching</div><div class="module-desc">Live objection role-play with real-time coaching and feedback. Practice responding to common pushbacks using proven frameworks.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Objection_RolePlay_Training.pptx">▶ Open Slides</a></div></div>
-  <div class="module-card w3"><div class="module-top"><span class="module-num">15</span><span class="module-week-tag wtag-w3">Week 3 · Day 1</span></div><div class="module-title">SPIN Selling Fundamentals</div><div class="module-desc">Core principles of SPIN Selling applied in discovery. Move from Situation to Problem, Implication, and Need-Payoff questions with purpose.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/SPIN_Selling_Methodology_Meevo.pptx">▶ Open Slides</a></div></div>
-  <div class="module-card w3"><div class="module-top"><span class="module-num">16</span><span class="module-week-tag wtag-w3">Week 3 · Day 1</span></div><div class="module-title">SDR: Continue Dials + Coaching</div><div class="module-desc">Reinforces outbound discipline through continued dial blocks with live coaching. Apply frameworks in real time with targeted feedback on tone and structure.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><span style="font-size:11px;color:var(--muted)">Live Session</span></div></div>
-  <div class="module-card w3"><div class="module-top"><span class="module-num">17</span><span class="module-week-tag wtag-w3">Week 3 · Day 2</span></div><div class="module-title">Social Selling — LinkedIn &amp; Research Techniques</div><div class="module-desc">Leverage LinkedIn to enhance prospecting. Identify decision-makers, uncover relevant insights, and personalize outreach strategically.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Social_Selling_LinkedIn.pptx">▶ Open Slides</a></div></div>
-  <div class="module-card w3"><div class="module-top"><span class="module-num">18</span><span class="module-week-tag wtag-w3">Week 3 · Day 4</span></div><div class="module-title">SDR-to-AE Handoff — Setting Demos Up for Success</div><div class="module-desc">Deliver clean, high-quality handoffs that improve win rates. Capture the right information in notes and set clear demo expectations.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/SDR_to_AE_Handoff.pptx">▶ Open Slides</a></div></div>
-  <div class="module-card w3"><div class="module-top"><span class="module-num">19</span><span class="module-week-tag wtag-w3">Week 3 · Day 4</span></div><div class="module-title">Introduction to Attention — Group Coaching</div><div class="module-desc">Group call reviews using Attention to identify strengths and coaching opportunities. Analyze conversations for structure, questioning, and conversion effectiveness.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Attention_Platform_Training_Guide.pptx">▶ Open Slides</a></div></div>
-  <div class="module-card w3"><div class="module-top"><span class="module-num">20</span><span class="module-week-tag wtag-w3">Week 3 · Day 5</span></div><div class="module-title">Time Management</div><div class="module-desc">Practical time management strategies for high-output SDR/AE performance. Structure call blocks, prioritize high-impact activities, minimize distractions.</div><div class="module-footer"><span class="module-day">Sales Enablement</span><a class="link-btn" href="https://github.com/MeevoSalesEnablement/SalesEnablement/raw/main/Time_Management_for_Sales.pptx">▶ Open Slides</a></div></div>
-</div></div>
-
-<!-- SE PRODUCT MODULES -->
-<div class="tab-content" id="tab-product">
-  <div class="note-box"><strong>Note for SEs:</strong> Each module is 1 hour. Demo live in Meevo — focus on what sales reps need to confidently speak about each feature, not full admin training. Include 10 min Q&amp;A at end of each session.</div>
-  <div class="product-grid">
-    <div class="product-card"><div class="product-mod-num">01</div><div class="product-title">Basic Navigation &amp; Business Setup</div><div class="product-topics">Basic Navigation of Meevo. Single Location vs. Multi-Location (CO) Data Setup, Business Settings, and Security.</div><div class="product-meta"><span class="product-day-tag">Day 2</span><span class="product-by">Delivered by: SE</span></div></div>
-    <div class="product-card"><div class="product-mod-num">02</div><div class="product-title">Employee Setup, Payroll &amp; Schedules</div><div class="product-topics">Employee Setup, Payroll, and Employee Schedule Management.</div><div class="product-meta"><span class="product-day-tag">Day 3</span><span class="product-by">Delivered by: SE</span></div></div>
-    <div class="product-card"><div class="product-mod-num">03</div><div class="product-title">Appointment Book &amp; Client Profiles</div><div class="product-topics">Appointment Book, Growth Indicators, Wait List, Self Check-In Kiosk, and Client Profiles.</div><div class="product-meta"><span class="product-day-tag">Days 4–5</span><span class="product-by">Delivered by: SE</span></div></div>
-    <div class="product-card"><div class="product-mod-num">04</div><div class="product-title">Register, MeevoPay &amp; MeevoTips</div><div class="product-topics">Register, Memberships, Packages, Points, Gift Cards, Product Recommendations, Self-Pay, MeevoPay, and MeevoTips.</div><div class="product-meta"><span class="product-day-tag">Days 6–7</span><span class="product-by">Delivered by: SE</span></div></div>
-    <div class="product-card"><div class="product-mod-num">05</div><div class="product-title">Notifications &amp; Marketing Suite</div><div class="product-topics">Automated Notifications, Two-Way Texting, Email Marketing, Text Marketing, and Online Presence Management.</div><div class="product-meta"><span class="product-day-tag">Day 8</span><span class="product-by">Delivered by: SE</span></div></div>
-    <div class="product-card"><div class="product-mod-num">06</div><div class="product-title">Online Customer Portal &amp; Mobile Applications</div><div class="product-topics">Online Booking, eGift, Online Membership Sales, MeGo Client App, MeGo Branded App, and MyMeevo Employee App.</div><div class="product-meta"><span class="product-day-tag">Day 9</span><span class="product-by">Delivered by: SE</span></div></div>
-    <div class="product-card"><div class="product-mod-num">07</div><div class="product-title">Smart Centers, Reporting, Goals &amp; Dashboards</div><div class="product-topics">Smart Centers, Reporting, Goals, Dashboards, Data Exports, Sales Rankings, and BI App.</div><div class="product-meta"><span class="product-day-tag">Days 10–11</span><span class="product-by">Delivered by: SE</span></div></div>
-  </div>
-</div>
-
+<div id="searchResults" style="display:none;padding:24px;max-width:1060px;margin:0 auto"></div>
+<div class="tabs" id="tabs"></div>
+<div class="main" id="main"></div>
+<div class="footer">Meevo Sales Enablement Dashboard · Q1 2026</div>
 <script>
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-  });
+var REPS=[
+{id:1,n:"Sandra Arnette",total:872,exc:51,good:212,nw:299,avg:2.49,gaps:["Discovery - Implications (1.10)","Discovery - Why Top Priority (1.17)","Intro Call - Why Top Priority (1.00)"],trend:[2.50,2.66,2.39,2.50],tl:"Recovering",opps:167,calls:354,themes:["GK navigation (562)","Discovery gaps (30)","Demo execution (76)"],actions:["Discovery fundamentals","GK info gleaning"],obj:{tier:"T2",score:3.29,type:"Cold Call + AE Demo (3.09)",detail:"Strong cold call objection handling"},price:{score:2.25,mastery:"11/76 (14%)",struggle:"30/76 (39%)",tier:"mid"},vol:{total:1172,mo:[370,252,514,36],eff:"Volume hurting quality"}},
+{id:2,n:"Africa Brown",total:829,exc:89,good:175,nw:269,avg:2.50,gaps:["Intro Call - Implications","Intro Call - Why Top Priority","GK Navigation"],trend:[2.44,2.74,2.59,2.68],tl:"Recovering",opps:135,calls:202,themes:["Cold calling consistency","Intro call effectiveness"],actions:["Reduce variability","Improve intro call framework"],obj:{tier:"T3",score:2.77,type:"Cold Call",detail:"32% mastery, 11% struggling. Objection coaching needed."},price:{score:null,tier:null},vol:{total:946,mo:[290,296,318,42],eff:"Consistent high volume, quality issue"}},
+{id:3,n:"Kaelyne Chavez",total:685,exc:76,good:139,nw:181,avg:2.68,gaps:["GK Intel Gathering","Intro Call Structure","Consistency"],trend:[null,2.65,2.70,2.68],tl:"Stable",opps:109,calls:136,themes:["GK navigation","Intro calls"],actions:["GK intel gathering","Intro call structure"],obj:{tier:"T2",score:3.06,type:"Cold Call",detail:"Developing objection handler"},price:{score:null,tier:null},vol:{total:774,mo:[307,185,255,27],eff:"Steady activity"}},
+{id:4,n:"Amber Martello",total:607,exc:99,good:138,nw:111,avg:2.51,gaps:["GK - Info Gleaning","GK - Connecting","Consistency"],trend:[null,2.48,2.53,2.51],tl:"Improving",opps:150,calls:193,themes:["Cold call execution"],actions:["Consistency improvement"],obj:{tier:"T2",score:3.45,type:"Cold Call",detail:"Strong cold call objection handler"},price:{score:null,tier:null},vol:{total:698,mo:[258,164,247,29],eff:"2.51 avg score"}},
+{id:5,n:"Chloe Arnette",total:535,exc:47,good:119,nw:154,avg:2.66,gaps:["GK Navigation","Intro Call Framework","GK Connection"],trend:[2.38,2.92,2.99,2.94],tl:"Strong ↑",opps:117,calls:137,themes:["GK navigation","Intro calls"],actions:["Intro call framework","GK connection"],obj:{tier:"T2",score:3.21,type:"Cold Call",detail:"Developing objection handler"},price:{score:null,tier:null},vol:{total:798,mo:[208,282,282,26],eff:"Better quality than Sandra/Africa"}},
+{id:6,n:"Myranda Grabman",total:470,exc:99,good:138,nw:111,avg:2.89,gaps:["Limited data","Limited data","Limited data"],trend:[null,2.88,2.89,2.89],tl:"Rock Solid",opps:96,calls:149,themes:["General coaching"],actions:["Continue current coaching"],obj:{tier:"T1",score:3.60,type:"Cold Call",detail:"75% mastery (58/77 at 4+), 3% struggling"},price:{score:2.57,tier:"mid"},vol:{total:726,mo:[0,350,359,17],eff:"HIGH QUALITY + HIGH VOLUME"}},
+{id:7,n:"Matt McCarthy",total:414,exc:93,good:99,nw:111,avg:2.84,gaps:["Limited data","Limited data","Limited data"],trend:[null,2.80,2.86,2.84],tl:"Stable",opps:117,calls:165,themes:["General coaching"],actions:["Continue current coaching"],obj:{tier:"T1",score:3.71,type:"Cold Call - Owner/Manager",detail:"82% mastery (51/62 at 4+), 5% struggling"},price:{score:2.42,tier:"mid"},vol:{total:548,mo:[145,215,182,6],eff:"Good balance quality/volume"}},
+{id:8,n:"Jenna Flory",total:385,exc:58,good:90,nw:123,avg:2.58,gaps:["Cold Call Execution","Discovery Depth","Consistency"],trend:[null,2.55,2.60,2.58],tl:"Stable",opps:121,calls:162,themes:["Cold call execution","Discovery depth"],actions:["Discovery coaching"],obj:{tier:"T1",score:3.65,type:"AE Demo (3.65) + Cold Call (3.55)",detail:"Versatile: 72% AE Demo, 61% Cold Call mastery"},price:{score:2.91,mastery:"20/57 (35%)",struggle:"9/57 (16%)",tier:"top"},vol:{total:505,mo:[142,144,207,12],eff:"2.58 avg score"}},
+{id:9,n:"Tyler Butt",total:382,exc:23,good:101,nw:158,avg:2.58,gaps:["Call Quality","Volume vs Quality","GK Navigation"],trend:[null,2.54,2.60,2.58],tl:"Stable",opps:112,calls:135,themes:["Call quality","Volume balance"],actions:["Quality focus","GK navigation"],obj:{tier:"T2",score:3.00,type:"Cold Call",detail:"At threshold — needs improvement"},price:{score:null,tier:null},vol:{total:889,mo:[1,426,416,46],eff:"Ramped Feb, sustained high volume"}},
+{id:10,n:"William Appleford",total:378,exc:33,good:93,nw:120,avg:2.63,gaps:["GK Navigation","Cold Call Consistency","Discovery"],trend:[2.46,2.58,2.58,null],tl:"Improving",opps:73,calls:83,themes:["GK navigation"],actions:["Continue GK coaching"],obj:{tier:"T2",score:3.06,type:"Cold Call",detail:"Developing objection handler"},price:{score:null,tier:null},vol:{total:440,mo:[null,null,null,null],eff:"Mid-tier activity"}},
+{id:11,n:"Michael Senich",total:303,exc:0,good:0,nw:0,avg:2.70,gaps:["Limited data","Limited data","Limited data"],trend:[null,2.68,2.71,2.70],tl:"Stable",opps:117,calls:183,themes:["General coaching"],actions:["Continue coaching"],obj:{tier:"T2",score:3.07,type:"Cold Call",detail:"Solid objection handler"},price:{score:null,tier:null},vol:{total:388,mo:[null,null,null,null],eff:"Started Mar"}},
+{id:12,n:"Monica Lopez",total:292,exc:0,good:0,nw:0,avg:2.57,gaps:["Limited data","Limited data","Limited data"],trend:[null,2.55,2.58,2.57],tl:"Stable",opps:83,calls:115,themes:["General coaching"],actions:["Continue coaching"],obj:{tier:"T1",score:3.63,type:"AE Demo",detail:"65% mastery (32/49 at 4+), 0% struggling"},price:{score:2.80,mastery:"10/51 (20%)",struggle:"8/51 (16%)",tier:"top"},vol:{total:391,mo:[null,null,null,null],eff:"Mid-tier activity"}},
+{id:13,n:"Candice Chuy",total:288,exc:45,good:28,nw:39,avg:2.71,gaps:["Limited data","Limited data","Limited data"],trend:[null,2.68,2.73,2.71],tl:"Stable",opps:103,calls:158,themes:["General coaching"],actions:["Continue coaching"],obj:{tier:"T1",score:3.71,type:"Cold Call (3.71) + AE Demo (3.64)",detail:"Strong across multiple call types: 69% CC, 73% AE mastery"},price:{score:2.76,mastery:"41/108 (38%)",struggle:"28/108 (26%)",tier:"top"},vol:{total:348,mo:[null,null,null,null],eff:"Mid-tier activity"}},
+{id:14,n:"Brandon Cline",total:231,exc:38,good:28,nw:47,avg:2.73,gaps:["Limited data","Limited data","Limited data"],trend:[null,2.75,2.89,null],tl:"Improving",opps:54,calls:69,themes:["General coaching"],actions:["Continue coaching"],obj:{tier:"T2",score:3.43,type:"AE Demo (3.43) + Cold Call (3.24)",detail:"Strong across call types"},price:{score:2.52,tier:"mid"},vol:{total:416,mo:[null,null,null,null],eff:"Mid-tier activity"}},
+{id:15,n:"Denise LaRocca",total:182,exc:0,good:0,nw:0,avg:2.79,gaps:["Limited data","Limited data","Limited data"],trend:[null,null,2.79,2.79],tl:"New",opps:136,calls:161,themes:["General coaching"],actions:["Continue coaching"],obj:{tier:"T1",score:3.74,type:"SE Demo - Technical Objections",detail:"87% mastery (128/147 at 4+), 6% struggling"},price:{score:null,tier:null},vol:{total:199,mo:[null,null,null,null],eff:"Mid-tier activity"}},
+{id:16,n:"Tony Sansone",total:161,exc:0,good:0,nw:0,avg:2.78,gaps:["Limited data","Limited data","Limited data"],trend:[null,null,2.78,2.78],tl:"New",opps:124,calls:151,themes:["General coaching"],actions:["Continue coaching"],obj:{tier:"T1",score:3.69,type:"SE Demo - Technical Objections",detail:"80% mastery (109/137 at 4+), 4% struggling"},price:{score:null,tier:null},vol:{total:181,mo:[null,null,null,null],eff:""}},
+{id:17,n:"Sky Guasco",total:116,exc:18,good:37,nw:29,avg:2.80,gaps:["Limited data","Limited data","Limited data"],trend:[null,null,2.78,2.80],tl:"New",opps:40,calls:47,themes:["General coaching"],actions:["Continue coaching"],obj:{tier:"T2",score:3.37,type:"Cold Call",detail:"Developing handler"},price:{score:null,tier:null},vol:{total:323,mo:[null,null,null,null],eff:"Started Mar"}},
+{id:18,n:"Spencer Hicks",total:108,exc:7,good:35,nw:44,avg:2.65,gaps:["Call Quality","Consistency","GK Navigation"],trend:[null,null,2.62,2.65],tl:"New",opps:24,calls:29,themes:["Call quality"],actions:["Quality coaching"],obj:{tier:"T2",score:3.45,type:"Cold Call",detail:"Strong cold call handler"},price:{score:null,tier:null},vol:{total:172,mo:[1,143,28,0],eff:"MAJOR DROP Mar→Apr. URGENT."}},
+{id:19,n:"Lauren Hopkins",total:94,exc:18,good:20,nw:21,avg:2.97,gaps:["Limited data","Limited data","Limited data"],trend:[null,null,2.85,2.97],tl:"Strong ↑",opps:62,calls:69,themes:["Strong performer"],actions:["Peer coaching candidate"],obj:{tier:"T2",score:3.43,type:"Cold Call",detail:"Strong cold call handler"},price:{score:1.80,mastery:"0/5 (0%)",struggle:"3/5 (60%)",tier:"critical"},vol:{total:119,mo:[null,null,105,14],eff:"New rep, good start"}},
+{id:20,n:"Ryan Burns",total:45,exc:12,good:15,nw:5,avg:2.77,gaps:["Limited data","Limited data","Limited data"],trend:[null,null,null,2.77],tl:"New",opps:24,calls:30,themes:["General coaching"],actions:["Continue coaching"],obj:{tier:"T1",score:3.87,type:"SE Demo - Technical Objections",detail:"87% mastery (26/30 at 4+), 0% struggling. BEST on team."},price:{score:null,tier:null},vol:{total:57,mo:[19,34,4,0],eff:"CRITICAL: 4 calls last 30 days"}},
+{id:21,n:"Jeremy Sexton",total:34,exc:0,good:0,nw:0,avg:2.59,gaps:["Limited data","Limited data","Limited data"],trend:[null,null,null,2.59],tl:"New",opps:11,calls:12,themes:["General coaching"],actions:["Continue coaching"],obj:{tier:"T3",score:2.75,type:"Cold Call (limited: 12 evals)",detail:"Development needed"},price:{score:null,tier:null},vol:{total:48,mo:[null,null,null,null],eff:"Started Mar"}},
+{id:22,n:"Patrick McCaghren",total:7,exc:0,good:0,nw:0,avg:2.37,gaps:["Limited data","Limited data","Limited data"],trend:[null,null,null,2.37],tl:"New",opps:3,calls:5,themes:["Limited calls"],actions:["Increase call volume"],obj:{tier:"T2",score:3.00,type:"AE Demo (limited: 2 evals)",detail:"Limited data"},price:{score:1.00,mastery:"0/2 (0%)",struggle:"2/2 (100%)",tier:"critical"},vol:{total:441,mo:[29,155,242,15],eff:"Strong ramp but quality needs work"}}
+];
+var COMPS=[{name:"Discovery - Implications",avg:1.10,type:"gap",detail:"Sandra: 27/30 evals below 2.0. Prospects don't feel urgency."},{name:"Discovery - Why Top Priority",avg:1.17,type:"gap",detail:"Sandra: 25/30 evals below 2.0. Misaligned demos."},{name:"Intro Call - Implications",avg:1.33,type:"gap",detail:"Multiple reps struggling."},{name:"AE Demo - Open-ended Qs",avg:1.63,type:"gap",detail:"Sandra: 28/76 below 2.0. Talking AT not WITH."},{name:"AE Demo - Clarifying Qs",avg:1.67,type:"gap",detail:"Sandra: 25/76 below 2.0."},{name:"AE Demo - Features vs Value",avg:1.81,type:"gap",detail:"Sandra: 18/68 below 2.0. Features over outcomes."},{name:"Cold Call - GK Info Gleaning",avg:1.99,type:"gap",detail:"Sandra: 247/562 below 2.0."},{name:"Intro Call - Next Steps",avg:4.67,type:"strength",detail:"Sandra: 3/3 at 4+. Peer coaching opportunity."},{name:"AE Demo - Next Steps",avg:3.68,type:"strength",detail:"Multiple reps strong."},{name:"CC - Owner Intro/Hook",avg:3.30,type:"strength",detail:"Lauren, Matt, Brandon lead."},{name:"CC - Owner Objection Nav",avg:3.29,type:"strength",detail:"Chloe, William lead."},{name:"Professional Rapport",avg:3.26,type:"strength",detail:"Chloe: 201/312 at 4+."}];
+var MONTHLY=[{month:"January",avg:2.54,strong:38,weak:27},{month:"February",avg:2.68,strong:44,weak:20},{month:"March",avg:2.59,strong:35,weak:24},{month:"April",avg:2.63,strong:41,weak:18}];
+var MO=["Jan","Feb","Mar","Apr"];
+function sc(v){return v>=3?"#4ade94":v>=2.7?"#60a5fa":v>=2.5?"#facc15":"#f87171"}
+function scBg(v){return v>=3?"#1a6b54":v>=2.7?"#1e3a5f":v>=2.5?"#5c4a0a":"#5f1d1d"}
+function scTx(){return "#ffffff"}
+function pct(n,t){return t?Math.round(n/t*100):0}
+function hue(n){return n.split("").reduce(function(a,c){return a+c.charCodeAt(0)},0)%360}
+function ini(n){return n.split(" ").map(function(w){return w[0]}).join("")}
+function av(name,sz){return'<div class="av" style="width:'+sz+'px;height:'+sz+'px;font-size:'+(sz*.36)+'px;background:hsl('+hue(name)+',40%,40%)">'+ini(name)+'</div>'}
+function spark(data,w,h){w=w||100;h=h||28;var v=data.map(function(val,i){return val!==null?{v:val,i:i}:null}).filter(Boolean);if(v.length<2)return'<span style="font-size:11px;color:#3a4f5f">—</span>';var mn=Math.min.apply(null,v.map(function(d){return d.v}))-0.1,mx=Math.max.apply(null,v.map(function(d){return d.v}))+0.1;var pts=v.map(function(d){return((d.i/3)*(w-4)+2)+","+(h-2-((d.v-mn)/(mx-mn))*(h-4))}).join(" ");var last=v[v.length-1].v,first=v[0].v,col=last>first?"#4ade94":last<first?"#f87171":"#5a7a8f";var dots=v.map(function(d,i){var x=(d.i/3)*(w-4)+2,y=h-2-((d.v-mn)/(mx-mn))*(h-4);return'<circle cx="'+x+'" cy="'+y+'" r="'+(i===v.length-1?3:1.5)+'" fill="'+col+'"/>'}).join("");return'<svg class="spark" width="'+w+'" height="'+h+'"><polyline points="'+pts+'" fill="none" stroke="'+col+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'+dots+'</svg>'}
+var currentTab="Overview",sortKey="total",sortDir="desc",searchVal="",selRep=null;
+var TABNAMES=["Overview","Call Coaching","Skills & Gaps","Trends","Objections","Pricing","Activity"];
+function sortedReps(){var f=REPS.filter(function(r){return r.n.toLowerCase().indexOf(searchVal.toLowerCase())>=0});f.sort(function(a,b){return sortDir==="desc"?(b[sortKey]||0)-(a[sortKey]||0):(a[sortKey]||0)-(b[sortKey]||0)});return f}
+function renderTabs(){var h="";TABNAMES.forEach(function(t){h+='<button class="tab'+(currentTab===t?" active":"")+'" data-tab="'+t+'">'+t+'</button>'});document.getElementById("tabs").innerHTML=h;document.querySelectorAll(".tab").forEach(function(b){b.onclick=function(){currentTab=this.dataset.tab;selRep=null;document.getElementById("searchResults").style.display="none";document.getElementById("tabs").style.display="flex";document.getElementById("main").style.display="block";render()}})}
+function renderRepProfile(r){
+var h='<div class="search-result"><div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">'+av(r.n,48)+'<div><h2>'+r.n+'</h2><div class="sub">'+r.total+' calls reviewed · '+r.opps+' opportunities · Trend: '+r.tl+'</div></div><div style="margin-left:auto;font-size:32px;font-weight:800;color:'+sc(r.avg)+'">'+r.avg+'</div></div>';
+h+='<div class="stat-grid">';
+h+='<div class="stat-box"><div class="stat-box-val" style="color:#4ade94">'+r.total+'</div><div class="stat-box-label">Calls Reviewed</div></div>';
+h+='<div class="stat-box"><div class="stat-box-val" style="color:'+sc(r.avg)+'">'+r.avg+'</div><div class="stat-box-label">Avg Score</div></div>';
+h+='<div class="stat-box"><div class="stat-box-val" style="color:#60a5fa">'+r.opps+'</div><div class="stat-box-label">Opportunities</div></div>';
+h+='<div class="stat-box"><div class="stat-box-val" style="color:'+(r.obj.score>=3.5?"#4ade94":r.obj.score>=3?"#facc15":"#f87171")+'">'+r.obj.score+'</div><div class="stat-box-label">Objection Score</div></div>';
+if(r.price.score!==null){h+='<div class="stat-box"><div class="stat-box-val" style="color:'+sc(r.price.score)+'">'+r.price.score+'</div><div class="stat-box-label">Pricing Score</div></div>'}
+if(r.vol.total){h+='<div class="stat-box"><div class="stat-box-val" style="color:#60a5fa">'+r.vol.total.toLocaleString()+'</div><div class="stat-box-label">Total Calls YTD</div></div>'}
+h+='</div>';
+h+='<div style="margin-bottom:16px"><div class="tag-title">Call Breakdown</div><div class="rep-stats">';
+[{l:"Excellent",v:r.exc,c:"#4ade94"},{l:"Good",v:r.good,c:"#60a5fa"},{l:"Needs Work",v:r.nw,c:"#f87171"}].forEach(function(b){h+='<div class="rep-stat" style="background:'+(b.v>0?b.c+"18":"#1a2736")+'"><div class="rep-stat-val" style="color:'+(b.v>0?b.c:"#3a4f5f")+'">'+(b.v>0?b.v:"—")+'</div><div class="rep-stat-label">'+b.l+(b.v>0?" ("+pct(b.v,r.total)+"%)":"")+'</div></div>'});
+h+='</div></div>';
+h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px"><div><div class="tag-title">Key Themes</div><div class="tags">';r.themes.forEach(function(t){h+='<span class="tag tag-theme">'+t+'</span>'});h+='</div></div><div><div class="tag-title">Coaching Actions</div><div class="tags">';r.actions.forEach(function(a){h+='<span class="tag tag-action">'+a+'</span>'});h+='</div></div></div>';
+h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div><div class="tag-title">Objection Handling</div><div style="background:#1a2736;border-radius:10px;padding:12px"><div style="font-size:13px;font-weight:600;color:#e0eaf0">'+r.obj.type+'</div><div style="font-size:11px;color:#5a7a8f;margin-top:4px">'+r.obj.detail+'</div></div></div>';
+h+='<div><div class="tag-title">Top 3 Skill Gaps</div><div style="background:#1a2736;border-radius:10px;padding:12px">';r.gaps.forEach(function(g,i){h+='<div style="font-size:12px;color:'+(g.includes("Limited")?"#3a4f5f":"#c8d6e0")+';padding:2px 0">'+(i+1)+'. '+g+'</div>'});h+='</div></div></div>';
+if(r.vol.mo&&r.vol.mo[0]!==null){h+='<div style="margin-top:16px"><div class="tag-title">Monthly Call Volume</div><div class="bar-chart">';r.vol.mo.forEach(function(v,i){if(v!==null){var mx=Math.max.apply(null,r.vol.mo.filter(function(x){return x!==null}));h+='<div class="bar-col"><div class="bar-fill-v" style="height:'+Math.max(v/mx*50,6)+'px;background:#60a5fa"></div><div class="bar-val" style="color:#60a5fa">'+v+'</div><div class="bar-lbl">'+MO[i]+'</div></div>'}else{h+='<div class="bar-col"><div style="color:#3a4f5f;font-size:10px">—</div><div class="bar-lbl">'+MO[i]+'</div></div>'}});h+='</div>';if(r.vol.eff){h+='<div style="font-size:11px;color:#5a7a8f;margin-top:8px">Insight: '+r.vol.eff+'</div>'}h+='</div>'}
+h+='</div>';return h}
+function renderOverview(){var tc=REPS.reduce(function(s,r){return s+r.total},0),ta=(REPS.reduce(function(s,r){return s+r.avg*r.total},0)/tc).toFixed(2),to=REPS.reduce(function(s,r){return s+r.opps},0),reps=sortedReps(),si=sortKey,arrow=sortDir==="desc"?"▼":"▲";
+var h='<div class="cards"><div class="card"><div class="card-label">Calls Reviewed</div><div class="card-value" style="color:#ffffff">'+tc.toLocaleString()+'</div><div class="card-sub">YTD all reps</div></div><div class="card"><div class="card-label">Team Avg</div><div class="card-value" style="color:#ffffff">'+ta+'</div><div class="card-sub">Out of 5.0</div></div><div class="card"><div class="card-label">Opps Coached</div><div class="card-value" style="color:#ffffff">'+to.toLocaleString()+'</div><div class="card-sub">100% coverage</div></div><div class="card"><div class="card-label">Competencies</div><div class="card-value" style="color:#ffffff">453</div><div class="card-sub">12 key areas</div></div></div>';
+h+='<div class="mo-row">';MONTHLY.forEach(function(m){h+='<div class="mo-card"><div class="mo-label">'+m.month+'</div><div class="mo-val" style="color:'+sc(m.avg)+'">'+m.avg+'</div><div style="display:flex;gap:10px;margin-top:6px"><span style="font-size:10px;color:#4ade94">▲ '+m.strong+'%</span><span style="font-size:10px;color:#f87171">▼ '+m.weak+'%</span></div></div>'});h+='</div>';
+h+='<div class="stitle">Team Roster</div>';
+h+='<div class="tbl-wrap"><table><thead><tr><th>Rep</th><th style="text-align:right" data-sort="total">Reviewed'+(si==="total"?" "+arrow:"")+'</th><th style="text-align:right" data-sort="avg">Avg'+(si==="avg"?" "+arrow:"")+'</th><th style="text-align:center">Excellent</th><th style="text-align:center">Needs Work</th><th style="text-align:center">Trend</th><th style="text-align:right" data-sort="opps">Opps'+(si==="opps"?" "+arrow:"")+'</th></tr></thead><tbody>';
+reps.forEach(function(r){h+='<tr data-rep="'+r.id+'"><td><div class="name-cell">'+av(r.n,30)+'<div style="font-weight:600;font-size:13px;color:#e0eaf0">'+r.n+'</div></div></td><td style="text-align:right;font-weight:600;color:#c8d6e0">'+r.total+'</td><td style="text-align:right"><span class="badge" style="color:#fff;background:'+scBg(r.avg)+'">'+r.avg+'</span></td><td style="text-align:center;color:#4ade94;font-weight:500">'+(r.exc>0?r.exc+" ("+pct(r.exc,r.total)+"%)":"—")+'</td><td style="text-align:center;color:#f87171;font-weight:500">'+(r.nw>0?r.nw+" ("+pct(r.nw,r.total)+"%)":"—")+'</td><td style="text-align:center">'+spark(r.trend)+'</td><td style="text-align:right;font-weight:500;color:#c8d6e0">'+r.opps+'</td></tr>'});
+h+='</tbody></table></div>';return h}
+function renderCoaching(){var h='<div class="filter-row"><button class="filter-btn'+(selRep===null?" active":"")+'" data-rep="all">All</button>';REPS.forEach(function(r){h+='<button class="filter-btn'+(selRep===r.id?" active":"")+'" data-rep="'+r.id+'">'+r.n.split(" ")[0]+'</button>'});h+='</div>';
+(selRep?REPS.filter(function(r){return r.id===selRep}):REPS).forEach(function(r){h+='<div class="rep-card"><div class="rep-header">'+av(r.n,36)+'<div style="flex:1"><div class="rep-name">'+r.n+'</div><div class="rep-sub">'+r.total+' calls · Avg: '+r.avg+' · '+r.tl+'</div></div><div class="rep-score" style="color:'+sc(r.avg)+'">'+r.avg+'</div></div><div class="rep-stats">';
+[{l:"Excellent",v:r.exc,c:"#4ade94"},{l:"Good",v:r.good,c:"#60a5fa"},{l:"Needs Work",v:r.nw,c:"#f87171"}].forEach(function(b){h+='<div class="rep-stat" style="background:'+(b.v>0?b.c+"18":"#1a2736")+'"><div class="rep-stat-val" style="color:'+(b.v>0?b.c:"#3a4f5f")+'">'+(b.v>0?b.v:"—")+'</div><div class="rep-stat-label">'+b.l+(b.v>0?" ("+pct(b.v,r.total)+"%)":"")+'</div></div>'});h+='</div>';
+h+='<div class="tag-section"><div class="tag-title">Key Themes</div><div class="tags">';r.themes.forEach(function(t){h+='<span class="tag tag-theme">'+t+'</span>'});h+='</div></div><div class="tag-section"><div class="tag-title">Coaching Actions</div><div class="tags">';r.actions.forEach(function(a){h+='<span class="tag tag-action">'+a+'</span>'});h+='</div></div></div>'});return h}
+function renderSkills(){var h='<div class="stitle" style="color:#f87171">Critical Gaps (Avg < 2.0)</div><div class="ssub">Urgent coaching needed</div>';
+COMPS.filter(function(c){return c.type==="gap"}).forEach(function(c,i){h+='<div class="comp-card" data-comp="'+i+'"><div class="comp-row"><div style="flex:1"><div class="comp-name">'+c.name+'</div><div class="bar-bg"><div class="bar-fill" style="width:'+((c.avg/5)*100)+'%;background:'+sc(c.avg)+'"></div></div></div><div class="comp-score" style="color:'+sc(c.avg)+'">'+c.avg+'</div></div><div class="comp-detail" id="cg-'+i+'" style="background:#2a1515;color:#fca5a5">'+c.detail+'</div></div>'});
+h+='<div class="stitle" style="color:#4ade94;margin-top:32px">Team Strengths (Avg > 3.0)</div><div class="ssub">Leverage for peer coaching</div>';
+COMPS.filter(function(c){return c.type==="strength"}).forEach(function(c,i){h+='<div class="comp-card" data-comp-s="'+i+'"><div class="comp-row"><div style="flex:1"><div class="comp-name">'+c.name+'</div><div class="bar-bg"><div class="bar-fill" style="width:'+((c.avg/5)*100)+'%;background:'+sc(c.avg)+'"></div></div></div><div class="comp-score" style="color:'+sc(c.avg)+'">'+c.avg+'</div></div><div class="comp-detail" id="cs-'+i+'" style="background:#0f2818;color:#86efac">'+c.detail+'</div></div>'});
+h+='<div class="stitle" style="margin-top:32px">Individual Top 3 Gaps</div><div class="gap-grid">';REPS.forEach(function(r){h+='<div class="gap-card"><div class="gap-card-header">'+av(r.n,24)+'<span style="font-weight:600;font-size:13px;color:#e0eaf0">'+r.n+'</span></div>';r.gaps.forEach(function(g,i){h+='<div class="gap-item'+(g.includes("Limited")?" limited":"")+'">'+(i+1)+'. '+g+'</div>'});h+='</div>'});h+='</div>';return h}
+function renderTrends(){var h='<div class="stitle">Monthly Team Performance</div><div class="ssub">Feb was best. Mar saw regression. Apr recovering.</div><div class="mo-row">';
+MONTHLY.forEach(function(m){h+='<div class="mo-card" style="text-align:center;padding:18px"><div class="mo-label">'+m.month+'</div><div style="font-size:32px;font-weight:700;color:'+sc(m.avg)+';margin-top:4px">'+m.avg+'</div><div style="display:flex;justify-content:center;gap:16px;margin-top:10px"><div><span style="font-size:16px;font-weight:700;color:#4ade94">'+m.strong+'%</span><div style="font-size:9px;color:#4a6275">Strong</div></div><div><span style="font-size:16px;font-weight:700;color:#f87171">'+m.weak+'%</span><div style="font-size:9px;color:#4a6275">Weak</div></div></div></div>'});h+='</div>';
+h+='<div class="stitle" style="color:#4ade94">Improving</div><div class="ssub">Positive trajectory</div>';REPS.filter(function(r){return r.tl==="Strong ↑"||r.tl==="Improving"}).forEach(function(r){h+='<div class="trend-row">'+av(r.n,30)+'<div style="flex:1"><div style="font-weight:600;font-size:13px;color:#e0eaf0">'+r.n+'</div><div style="font-size:11px;color:#4ade94">'+r.tl+'</div></div>'+spark(r.trend,120,30)+'<div style="font-size:16px;font-weight:700;color:'+sc(r.avg)+'">'+r.avg+'</div></div>'});
+h+='<div class="stitle" style="color:#f87171;margin-top:24px">Watch List</div><div class="ssub">Monitor closely</div>';REPS.filter(function(r){return r.tl==="Recovering"}).forEach(function(r){h+='<div class="trend-row warn">'+av(r.n,30)+'<div style="flex:1"><div style="font-weight:600;font-size:13px;color:#e0eaf0">'+r.n+'</div><div style="font-size:11px;color:#f87171">'+r.tl+'</div></div>'+spark(r.trend,120,30)+'<div style="font-size:16px;font-weight:700;color:'+sc(r.avg)+'">'+r.avg+'</div></div>'});
+h+='<div class="stitle" style="margin-top:24px">All Reps</div><div class="trend-grid">';REPS.forEach(function(r){h+='<div class="trend-mini">'+av(r.n,24)+'<div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:500;color:#c8d6e0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+r.n+'</div><div style="font-size:10px;color:#4a6275">'+r.tl+'</div></div>'+spark(r.trend,60,20)+'<span style="font-size:12px;font-weight:700;color:'+sc(r.avg)+'">'+r.avg+'</span></div>'});h+='</div>';return h}
+function renderObjections(){var h='<div class="stitle">Objection Handling Effectiveness</div><div class="ssub">Performance across cold calls, AE demos, and SE demos</div>';
+var tiers=[{name:"Elite Handlers",badge:"T1",color:"#4ade94",bg:"rgba(74,222,148,.1)",reps:REPS.filter(function(r){return r.obj.tier==="T1"}).sort(function(a,b){return b.obj.score-a.obj.score})},{name:"Strong Handlers",badge:"T2",color:"#facc15",bg:"rgba(250,204,21,.1)",reps:REPS.filter(function(r){return r.obj.tier==="T2"}).sort(function(a,b){return b.obj.score-a.obj.score})},{name:"Development Needed",badge:"T3",color:"#f87171",bg:"rgba(248,113,113,.1)",reps:REPS.filter(function(r){return r.obj.tier==="T3"}).sort(function(a,b){return b.obj.score-a.obj.score})}];
+tiers.forEach(function(t){h+='<div class="tier-card"><div class="tier-header"><span class="tier-badge" style="background:'+t.bg+';color:'+t.color+'">'+t.badge+'</span><span style="font-weight:600;font-size:14px;color:#e0eaf0">'+t.name+' ('+t.reps.length+')</span></div>';
+t.reps.forEach(function(r){h+='<div class="tier-rep">'+av(r.n,30)+'<div style="flex:1"><div style="font-weight:600;font-size:13px;color:#e0eaf0">'+r.n+'</div><div class="tier-detail">'+r.obj.type+'</div><div class="tier-detail">'+r.obj.detail+'</div></div><div style="font-size:20px;font-weight:700;color:'+t.color+'">'+r.obj.score+'</div></div>'});h+='</div>'});
+h+='<div class="rep-card" style="margin-top:16px"><div class="stitle" style="font-size:14px">Key Insights</div><div style="font-size:12px;color:#7a9aad;line-height:1.8">• SE team dominates: Ryan Burns (3.87), Denise LaRocca (3.74), Tony Sansone (3.69)<br>• AE strength: Jenna Flory, Candice Chuy, Monica Lopez strong in demo objections<br>• Cold call leaders: Matt McCarthy, Myranda Grabman, Amber Martello<br>• Development priority: Africa Brown needs objection handling coaching</div></div>';return h}
+function renderPricing(){var h='<div class="stitle">Pricing & Negotiation Tracking</div><div class="ssub">Team average: 2.50/5.0 — pricing is a weakness. Only 3 reps above 2.75.</div>';
+var top=REPS.filter(function(r){return r.price.tier==="top"}).sort(function(a,b){return b.price.score-a.price.score});
+var mid=REPS.filter(function(r){return r.price.tier==="mid"}).sort(function(a,b){return b.price.score-a.price.score});
+var crit=REPS.filter(function(r){return r.price.tier==="critical"}).sort(function(a,b){return b.price.score-a.price.score});
+h+='<div class="tier-card"><div class="tier-header"><span class="tier-badge" style="background:rgba(74,222,148,.1);color:#4ade94">TOP</span><span style="font-weight:600;font-size:14px;color:#e0eaf0">Top Performers (≥2.75)</span></div>';
+top.forEach(function(r){h+='<div class="tier-rep">'+av(r.n,30)+'<div style="flex:1"><div style="font-weight:600;font-size:13px;color:#e0eaf0">'+r.n+'</div>'+(r.price.mastery?'<div class="tier-detail">Mastery: '+r.price.mastery+' at 4+ · Struggling: '+r.price.struggle+' below 2.0</div>':'')+'</div><div style="font-size:20px;font-weight:700;color:#4ade94">'+r.price.score+'</div></div>'});h+='</div>';
+h+='<div class="tier-card"><div class="tier-header"><span class="tier-badge" style="background:rgba(250,204,21,.1);color:#facc15">MID</span><span style="font-weight:600;font-size:14px;color:#e0eaf0">Mid-Tier (2.25-2.75)</span></div>';
+mid.forEach(function(r){h+='<div class="tier-rep">'+av(r.n,30)+'<div style="flex:1"><div style="font-weight:600;font-size:13px;color:#e0eaf0">'+r.n+'</div></div><div style="font-size:20px;font-weight:700;color:#facc15">'+r.price.score+'</div></div>'});h+='</div>';
+h+='<div class="tier-card" style="border-color:#7f1d1d"><div class="tier-header"><span class="tier-badge" style="background:rgba(248,113,113,.1);color:#f87171">CRITICAL</span><span style="font-weight:600;font-size:14px;color:#e0eaf0">Urgent Development (<2.0)</span></div>';
+crit.forEach(function(r){h+='<div class="tier-rep">'+av(r.n,30)+'<div style="flex:1"><div style="font-weight:600;font-size:13px;color:#e0eaf0">'+r.n+'</div>'+(r.price.mastery?'<div class="tier-detail" style="color:#f87171">Mastery: '+r.price.mastery+' · Struggling: '+r.price.struggle+'</div>':'')+'</div><div style="font-size:20px;font-weight:700;color:#f87171">'+r.price.score+'</div></div>'});h+='</div>';
+h+='<div class="rep-card" style="margin-top:16px"><div class="stitle" style="font-size:14px">Key Insights</div><div style="font-size:12px;color:#7a9aad;line-height:1.8">• Only 3 reps above 2.75 — pricing is a team-wide weakness<br>• 39% of Sandra\'s pricing discussions score below 2.0<br>• Lauren Hopkins struggling (0/5 at 4+, 60% below 2.0) — new rep risk<br>• Patrick McCaghren: 100% below 2.0 — CRITICAL immediate training needed</div></div>';return h}
+function renderActivity(){var h='<div class="stitle">Outreach Activity & Efficiency</div><div class="ssub">Volume ≠ Quality. Sweet spot: 400-700 calls with 2.75+ avg.</div>';
+var sorted=[].concat(REPS).filter(function(r){return r.vol.total}).sort(function(a,b){return b.vol.total-a.vol.total});
+h+='<div class="tbl-wrap"><table><thead><tr><th>#</th><th>Rep</th><th style="text-align:right">Calls YTD</th><th style="text-align:right">Avg Score</th><th style="text-align:center">Trend</th><th>Efficiency</th></tr></thead><tbody>';
+sorted.forEach(function(r,i){var effCol=r.avg>=2.8&&r.vol.total>=400?"#4ade94":r.avg<2.5?"#f87171":"#c8d6e0";h+='<tr><td style="color:#4a6275">'+(i+1)+'</td><td><div class="name-cell">'+av(r.n,26)+'<span style="font-weight:600;font-size:13px;color:#e0eaf0">'+r.n+'</span></div></td><td style="text-align:right;font-weight:600;color:#60a5fa">'+r.vol.total.toLocaleString()+'</td><td style="text-align:right"><span class="badge" style="color:#fff;background:'+scBg(r.avg)+'">'+r.avg+'</span></td><td style="text-align:center">'+spark(r.trend,80,22)+'</td><td style="font-size:11px;color:'+effCol+'">'+r.vol.eff+'</td></tr>'});
+h+='</tbody></table></div>';
+h+='<div class="rep-card" style="margin-top:20px"><div class="stitle" style="font-size:14px;color:#4ade94">Best Efficiency (Quality + Volume)</div><div style="margin-top:12px">';
+[{n:"Lauren Hopkins",a:"2.97",v:"119"},{n:"Myranda Grabman",a:"2.89",v:"726"},{n:"Matt McCarthy",a:"2.84",v:"548"},{n:"Jenna Flory",a:"2.84",v:"505"},{n:"Sky Guasco",a:"2.80",v:"323"}].forEach(function(r){h+='<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #1a2736"><div style="flex:1;font-size:13px;font-weight:500;color:#e0eaf0">'+r.n+'</div><span class="badge" style="color:#4ade94;background:rgba(74,222,148,.15)">'+r.a+' avg</span><span style="font-size:12px;color:#60a5fa">'+r.v+' calls</span></div>'});
+h+='</div></div>';
+h+='<div class="rep-card"><div class="stitle" style="font-size:14px;color:#f87171">Activity Alerts</div><div style="margin-top:12px;font-size:12px;color:#fca5a5;line-height:2">• Spencer Hicks: 143→28→0 calls (Mar→Apr). URGENT.<br>• Ryan Burns: Only 4 calls in March, 0 in April. CRITICAL.<br>• Sandra Arnette: 514 calls in March — quality suffered (2.39 avg).<br>• Patrick McCaghren: Strong ramp (242 in Mar) but 2.37 avg quality.</div></div>';return h}
+function render(){renderTabs();var m=document.getElementById("main");if(currentTab==="Overview")m.innerHTML=renderOverview();else if(currentTab==="Call Coaching")m.innerHTML=renderCoaching();else if(currentTab==="Skills & Gaps")m.innerHTML=renderSkills();else if(currentTab==="Trends")m.innerHTML=renderTrends();else if(currentTab==="Objections")m.innerHTML=renderObjections();else if(currentTab==="Pricing")m.innerHTML=renderPricing();else if(currentTab==="Activity")m.innerHTML=renderActivity();bindEvents()}
+function bindEvents(){document.querySelectorAll("th[data-sort]").forEach(function(th){th.onclick=function(){var k=this.dataset.sort;if(sortKey===k)sortDir=sortDir==="desc"?"asc":"desc";else{sortKey=k;sortDir="desc"}render()}});
+document.querySelectorAll("tr[data-rep]").forEach(function(tr){tr.onclick=function(){selRep=parseInt(this.dataset.rep);currentTab="Call Coaching";render()}});
+document.querySelectorAll(".filter-btn").forEach(function(b){b.onclick=function(){selRep=this.dataset.rep==="all"?null:parseInt(this.dataset.rep);render()}});
+document.querySelectorAll(".comp-card[data-comp]").forEach(function(c){c.onclick=function(){var d=document.getElementById("cg-"+this.dataset.comp);if(d)d.classList.toggle("open")}});
+document.querySelectorAll(".comp-card[data-comp-s]").forEach(function(c){c.onclick=function(){var d=document.getElementById("cs-"+this.dataset.compS);if(d)d.classList.toggle("open")}})}
+// Global search
+document.getElementById("globalSearch").addEventListener("input",function(){
+  var q=this.value.trim().toLowerCase();
+  var sr=document.getElementById("searchResults");
+  var tabs=document.getElementById("tabs");
+  var main=document.getElementById("main");
+  if(q.length<2){sr.style.display="none";tabs.style.display="flex";main.style.display="block";return}
+  var matches=REPS.filter(function(r){return r.n.toLowerCase().indexOf(q)>=0});
+  if(matches.length===0){sr.innerHTML='<div style="text-align:center;padding:40px;color:#4a6275">No reps found matching "'+q+'"</div>';sr.style.display="block";tabs.style.display="none";main.style.display="none";return}
+  var h="";matches.forEach(function(r){h+=renderRepProfile(r)});
+  sr.innerHTML=h;sr.style.display="block";tabs.style.display="none";main.style.display="none";
 });
+render();
 </script>
 </body>
 </html>
